@@ -1,0 +1,6 @@
+.vs-liveshare-keychain
+.vscode-server/
+.ssh/
+.local/
+.history/
+.gitconfig
