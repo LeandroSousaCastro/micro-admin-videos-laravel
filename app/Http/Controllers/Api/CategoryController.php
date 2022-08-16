@@ -31,11 +31,12 @@ class CategoryController extends Controller
                 totalPage: (int) $request->get('total_page', 15),
             )
         );
-
+        
         return CategoryResource::collection($response->items)
             ->additional([
                 'meta' => [
                     'total' => $response->total,
+                    'current_page' => $response->current_page,
                     'last_page' => $response->last_page,
                     'first_page' => $response->first_page,
                     'per_page' => $response->per_page,
@@ -51,7 +52,7 @@ class CategoryController extends Controller
             new CategoryGetInputDto($id)
         );
 
-        return (new CategoryResource(collect($category)))
+        return (new CategoryResource($category))
                     ->response();
     }
 
@@ -65,7 +66,7 @@ class CategoryController extends Controller
             )
         );
 
-        return (new CategoryResource(collect($response)))
+        return (new CategoryResource($response))
                     ->response()
                     ->setStatusCode(Response::HTTP_CREATED);
     }
@@ -79,7 +80,7 @@ class CategoryController extends Controller
             )
         );
 
-        return (new CategoryResource(collect($response)))
+        return (new CategoryResource($response))
                     ->response();
     }
 

@@ -8,7 +8,7 @@ use Core\Category\Application\Dto\{
 };
 use Core\Category\Application\UseCase\ListUseCase;
 use Core\Category\Domain\Repository\RepositoryInterface;
-use Core\Category\Seedwork\Repository\PaginationInterface;
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;

@@ -2,18 +2,23 @@
 
 namespace App\Repositories\Presenters;
 
-use Core\Category\Seedwork\Repository\PaginationInterface;
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use stdClass;
 
 class PaginationPresenter implements PaginationInterface
 {
+    /**
+     * @return stdClass[]
+     */
     protected array $items = [];
 
     public function __construct(
         protected LengthAwarePaginator $paginator
     ) {
-        $this->items = $this->resolveItems($this->paginator->items());
+        $this->items = $this->resolveItems(
+            items: $this->paginator->items()
+        );
     }
 
     /**
@@ -29,14 +34,14 @@ class PaginationPresenter implements PaginationInterface
         return $this->paginator->total() ?? 0;
     }
 
-    public function firstPage(): int
-    {
-        return $this->paginator->firstItem() ?? 0;
-    }
-
     public function lastPage(): int
     {
         return $this->paginator->lastPage() ?? 0;
+    }
+
+    public function firstPage(): int
+    {
+        return $this->paginator->firstItem() ?? 0;
     }
 
     public function currentPage(): int
@@ -59,16 +64,20 @@ class PaginationPresenter implements PaginationInterface
         return $this->paginator->lastItem() ?? 0;
     }
 
-    protected function resolveItems(array $items): array
+    private function resolveItems(array $items): array
     {
-        $data = [];
+        $response = [];
+
         foreach ($items as $item) {
             $stdClass = new stdClass;
             foreach ($item->toArray() as $key => $value) {
                 $stdClass->{$key} = $value;
             }
-            array_push($data, $stdClass);
+
+            array_push($response, $stdClass);
         }
-        return $data;
+
+        return $response;
     }
+
 }

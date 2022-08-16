@@ -26,9 +26,9 @@ class ListUseCase
         return new ListOutputDto(
             items: $categories->items(),
             total: $categories->total(),
+            current_page: $categories->currentPage(),
             last_page: $categories->lastPage(),
             first_page: $categories->firstPage(),
-            current_page: $categories->currentPage(),
             per_page: $categories->perPage(),
             to: $categories->to(),
             from: $categories->from()

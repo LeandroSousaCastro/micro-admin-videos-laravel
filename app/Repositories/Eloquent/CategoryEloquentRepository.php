@@ -4,10 +4,10 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Category as CategoryModel;
 use App\Repositories\Presenters\PaginationPresenter;
-use Core\Category\Seedwork\Repository\PaginationInterface;
 use Core\Category\Domain\Entity\Category as EntityCategory;
 use Core\Category\Domain\Repository\RepositoryInterface as CategoryRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 
 class CategoryEloquentRepository implements CategoryRepositoryInterface
 {
@@ -55,9 +55,9 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
     {
         $query = $this->model;
         if ($filter) {
-            $query->where('name', 'LIKE', "%{$filter}%");
+            $query = $query->where('name', 'LIKE', "%{$filter}%");
         }
-        $query->orderBy('id', $order);
+        $query = $query->orderBy('id', $order);
         $paginator = $query->paginate();
 
         return new PaginationPresenter($paginator);

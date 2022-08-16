@@ -25,7 +25,10 @@ class CategoryControllerUnitTest extends TestCase
         $mockListUseCase->shouldReceive('execute')->andReturn($mockListOutputDto);
 
         $controller = new CategoryController();
-        $response = $controller->index($mockRequest, $mockListUseCase);
+        $response = $controller->index(
+            $mockRequest,
+            $mockListUseCase
+        );
 
         $this->assertIsObject($response->resource);
         $this->assertArrayHasKey('meta', $response->additional);

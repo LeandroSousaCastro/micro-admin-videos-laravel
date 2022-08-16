@@ -6,7 +6,7 @@ use Core\Seedwork\Domain\Exception\NotFoundException;
 use App\Models\Category as CategoryModel;
 use App\Repositories\Eloquent\CategoryEloquentRepository;
 use Core\Category\Domain\Entity\Category as EntityCategory;
-use Core\Category\Seedwork\Repository\PaginationInterface;
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Tests\TestCase;
 
 class CategoryEloquentRepositoryTest extends TestCase

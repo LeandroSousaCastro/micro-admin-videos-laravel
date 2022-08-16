@@ -3,7 +3,7 @@
 namespace Core\Category\Domain\Repository;
 
 use Core\Category\Domain\Entity\Category;
-use Core\Category\Seedwork\Repository\PaginationInterface;
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 
 interface RepositoryInterface
 {
