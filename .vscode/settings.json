@@ -1,0 +1,11 @@
+{
+    "conventionalCommits.scopes": [
+        "Entities",
+        "Domain Validation",
+        "Value Object",
+        "Project",
+        "Use Case",
+        "Tests",
+        "Controllers"
+    ]
+}
