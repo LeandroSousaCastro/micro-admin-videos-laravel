@@ -2,14 +2,12 @@
 
 namespace Core\Category\Domain\Entity;
 
-use Core\Category\Domain\Entity\Traits\MethodsMagicsTrait;
+use Core\Seedwork\Domain\Entity\EntityBase;
 use Core\Seedwork\Domain\Validation\DomainValidation;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 
-class Category
+class Category extends EntityBase
 {
-    use MethodsMagicsTrait;
-
     public function __construct(
         protected Uuid|string $id = '',
         protected string $name = '',
@@ -17,8 +15,7 @@ class Category
         protected bool $isActive = true,
         protected \DateTime|string $createdAt = ''
     ) {
-        $this->id = $this->id ? new Uuid($this->id) : Uuid::random();
-        $this->createdAt = $this->createdAt ? new \DateTime($this->createdAt) : new \DateTime();
+        parent::__construct($id, $createdAt);
         $this->validate();
     }
 

@@ -9,16 +9,16 @@ use Core\Category\Application\Dto\{
 use Core\Category\Application\UseCase\UpdateUseCase;
 use Core\Category\Domain\Entity\Category;
 use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 use stdClass;
 
 class UpdateUseCaseUnitTest extends TestCase
 {
     public function testUpdateCategory()
     {
-        $uuid = (string) Uuid::uuid4()->toString();
+        $uuid = Uuid::random();
         $categoryName = 'Name';
         $categoryDesc = 'Desc';
 

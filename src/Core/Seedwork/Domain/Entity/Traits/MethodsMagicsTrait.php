@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Category\Domain\Entity\Traits;
+namespace Core\Seedwork\Domain\Entity\Traits;
 
 use Exception;
 

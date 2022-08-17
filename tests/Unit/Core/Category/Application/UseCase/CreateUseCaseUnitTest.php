@@ -9,23 +9,23 @@ use Core\Category\Application\Dto\{
 use Core\Category\Application\UseCase\CreateUseCase;
 use Core\Category\Domain\Entity\Category;
 use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 use stdClass;
 
 class CreateUseCaseUnitTest extends TestCase
 {
     public function testCreateNewCategory()
     {
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = Uuid::random();
         $name = 'name';
 
         $this->mockEntity = Mockery::mock(Category::class, [
             $uuid,
             $name
         ]);
-        $this->mockEntity->shouldReceive('id')->andReturn($uuid);
+        $this->mockEntity->shouldReceive('constr')->andReturn($uuid);
         $this->mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
         $this->mockRepository = Mockery::mock(stdClass::class, RepositoryInterface::class);
