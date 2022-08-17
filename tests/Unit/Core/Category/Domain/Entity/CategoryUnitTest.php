@@ -69,24 +69,42 @@ class CategoryUnitTest extends TestCase
         $this->assertEquals("New Category description", $category->description);
     }
 
-    public function testExceptionName()
+    public function testExceptionNameMotNull()
+    {
+        $this->expectException(EntityValidationException::class);
+        $this->expectExceptionMessage('Should not be empty or null');
+        (new Category());
+    }
+
+    public function testExceptionNameMinLength()
     {
         $this->expectException(EntityValidationException::class);
         $this->expectExceptionMessage("The value must not be least than 2 characters");
-        $category = new Category(
+        (new Category(
             name: 'a',
             description: "Category description",
             isActive: true
-        );
+        ));
+    }
+
+    public function testExceptionNameMaxLength()
+    {
+        $this->expectException(EntityValidationException::class);
+        $this->expectExceptionMessage("The value must not be greater than 255 characters");
+        (new Category(
+            name: str_repeat('a', 256),
+            description: "Category description",
+            isActive: true
+        ));
     }
 
     public function testExceptionDescription()
     {
         $this->expectException(EntityValidationException::class);
         $this->expectExceptionMessage("The value must not be greater than 255 characters");
-        $category = new Category(
+        (new Category(
             name: str_repeat('a', 5),
             description: str_repeat('a', 256)
-        );
+        ));
     }
 }

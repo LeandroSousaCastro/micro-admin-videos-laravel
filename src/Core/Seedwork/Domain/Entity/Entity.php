@@ -5,7 +5,7 @@ namespace Core\Seedwork\Domain\Entity;
 use Core\Seedwork\Domain\Entity\Traits\MethodsMagicsTrait;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 
-abstract class EntityBase
+abstract class Entity
 {
     use MethodsMagicsTrait;
 

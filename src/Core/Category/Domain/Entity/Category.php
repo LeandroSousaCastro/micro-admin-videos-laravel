@@ -2,12 +2,15 @@
 
 namespace Core\Category\Domain\Entity;
 
-use Core\Seedwork\Domain\Entity\EntityBase;
+use Core\Seedwork\Domain\Entity\Entity;
+use Core\Seedwork\Domain\Entity\Traits\ActivateDeactivateTrait;
 use Core\Seedwork\Domain\Validation\DomainValidation;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 
-class Category extends EntityBase
+class Category extends Entity
 {
+    use ActivateDeactivateTrait;
+    
     public function __construct(
         protected Uuid|string $id = '',
         protected string $name = '',
@@ -17,16 +20,6 @@ class Category extends EntityBase
     ) {
         parent::__construct($id, $createdAt);
         $this->validate();
-    }
-
-    public function activate(): void
-    {
-        $this->isActive = true;
-    }
-
-    public function deactivate(): void
-    {
-        $this->isActive = false;
     }
 
     public function update(
@@ -40,6 +33,7 @@ class Category extends EntityBase
 
     private function validate()
     {
+        DomainValidation::notNull($this->name);
         DomainValidation::strMaxLength($this->name);
         DomainValidation::strMinLength($this->name);
         DomainValidation::strCanNullAndMaxLength($this->description);

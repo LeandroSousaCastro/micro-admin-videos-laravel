@@ -4,21 +4,17 @@ namespace Core\Seedwork\Domain\ValueObject;
 
 use Ramsey\Uuid\Uuid as RamseyUuid;
 
-class Uuid
+class Uuid extends ValueObject
 {
-    public function __construct(protected string $value)
+    public function __construct(protected $value)
     {
+        parent::__construct($value);
         $this->ensureIsValid($value);
     }
 
     public static function random(): self
     {
         return new self(RamseyUuid::uuid4()->toString());
-    }
-
-    public function __toString(): string
-    {
-        return $this->value;
     }
 
     public function ensureIsValid(string $id): void
