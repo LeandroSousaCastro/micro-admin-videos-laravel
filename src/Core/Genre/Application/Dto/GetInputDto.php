@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Category\Application\Dto;
+namespace Core\Genre\Application\Dto;
 
 class GetInputDto
 {

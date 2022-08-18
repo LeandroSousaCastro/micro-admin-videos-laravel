@@ -16,13 +16,12 @@ class GetUseCase
 
     public function execute(GetInputDto $input): GetOutputDto
     {
-        $category = $this->repository->findById($input->id);
+        $genre = $this->repository->findById($input->id);
         return new GetOutputDto(
-            id: $category->id,
-            name: $category->name,
-            description: $category->description,
-            is_active: $category->isActive,
-            created_at: $category->createdAt()
+            id: $genre->id(),
+            name: $genre->name,
+            is_active: $genre->isActive,
+            created_at: $genre->createdAt()
         );
     }
 }
