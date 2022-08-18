@@ -7,7 +7,7 @@ use Core\Category\Application\Dto\{
     DeleteOutputDto
 };
 use Core\Category\Application\UseCase\DeleteUseCase;
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -17,7 +17,7 @@ class DeleteUseCaseUnitTest extends TestCase
 {
     public function testUpdateCategory()
     {
-        $this->mockRepository = Mockery::mock(stdClass::class, RepositoryInterface::class);
+        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepository->shouldReceive('delete')->andReturn(true);
 
         $uuid = (string) Uuid::uuid4()->toString();
@@ -34,7 +34,7 @@ class DeleteUseCaseUnitTest extends TestCase
         /**
          * Spies
          */
-        $this->spy = Mockery::spy(stdClass::class, RepositoryInterface::class);
+        $this->spy = Mockery::spy(stdClass::class, CategoryRepositoryInterface::class);
         $this->spy->shouldReceive('delete')->andReturn(true);
         $useCase = new DeleteUseCase($this->spy);
         $useCase->execute($this->mockInputDto);

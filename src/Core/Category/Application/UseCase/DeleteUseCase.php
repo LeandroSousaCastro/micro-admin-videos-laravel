@@ -6,11 +6,11 @@ use Core\Category\Application\Dto\{
     DeleteInputDto,
     DeleteOutputDto,
 };
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 
 class DeleteUseCase
 {
-    public function __construct(protected RepositoryInterface $repository)
+    public function __construct(protected CategoryRepositoryInterface $repository)
     {
     }
 

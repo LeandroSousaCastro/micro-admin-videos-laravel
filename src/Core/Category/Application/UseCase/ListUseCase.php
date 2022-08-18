@@ -6,11 +6,11 @@ use Core\Category\Application\Dto\{
     ListInputDto,
     ListOutputDto
 };
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 
 class ListUseCase
 {
-    public function __construct(protected RepositoryInterface $repository)
+    public function __construct(protected CategoryRepositoryInterface $repository)
     {
     }
 

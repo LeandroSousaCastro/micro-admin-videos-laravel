@@ -5,11 +5,11 @@ namespace App\Repositories\Eloquent;
 use App\Models\Category as CategoryModel;
 use App\Repositories\Presenters\PaginationPresenter;
 use Core\Category\Domain\Entity\Category as EntityCategory;
-use Core\Category\Domain\Repository\RepositoryInterface as CategoryRepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface as CategoryCategoryRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
 
-class CategoryEloquentRepository implements CategoryRepositoryInterface
+class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
 {
 
     public function __construct(CategoryModel $model)

@@ -7,11 +7,11 @@ use Core\Category\Application\Dto\{
     CreateOutputDto
 };
 use Core\Category\Domain\Entity\Category;
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 
 class CreateUseCase
 {
-    public function __construct(protected RepositoryInterface $repository)
+    public function __construct(protected CategoryRepositoryInterface $repository)
     {
     }
 

@@ -8,7 +8,7 @@ use Core\Category\Application\Dto\{
 };
 use Core\Category\Application\UseCase\GetUseCase;
 use Core\Category\Domain\Entity\Category;
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -27,7 +27,7 @@ class GetUseCaseUnitTest extends TestCase
         $this->mockEntity->shouldReceive('id')->andReturn($id);
         $this->mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
-        $this->mockRepository = Mockery::mock(stdClass::class, RepositoryInterface::class);
+        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepository->shouldReceive('findById')
             ->with($id)
             ->andReturn($this->mockEntity);

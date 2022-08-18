@@ -7,7 +7,7 @@ use Core\Category\Application\Dto\{
     ListOutputDto
 };
 use Core\Category\Application\UseCase\ListUseCase;
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +34,7 @@ class ListUseCaseUnitTest extends TestCase
     {
         $mockPagination = $this->mockPagination();
 
-        $this->mockRepository = Mockery::mock(stdClass::class, RepositoryInterface::class);
+        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepository->shouldReceive('paginate')->andReturn($mockPagination);
         $useCase = new ListUseCase($this->mockRepository);
         $this->mockListInputDto = Mockery::mock(ListInputDto::class, [
@@ -64,7 +64,7 @@ class ListUseCaseUnitTest extends TestCase
             $register,
         ]);
 
-        $this->mockRepository = Mockery::mock(stdClass::class, RepositoryInterface::class);
+        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $this->mockRepository->shouldReceive('paginate')->andReturn($mockPagination);
         $useCase = new ListUseCase($this->mockRepository);
         $this->mockListInputDto = Mockery::mock(ListInputDto::class, [

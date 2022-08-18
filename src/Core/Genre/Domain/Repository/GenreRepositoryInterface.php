@@ -1,16 +1,16 @@
 <?php
 
-namespace Core\Category\Domain\Repository;
+namespace Core\Genre\Domain\Repository;
 
-use Core\Category\Domain\Entity\Category;
+use Core\Genre\Domain\Entity\Genre;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
 
-interface RepositoryInterface
+interface GenreRepositoryInterface
 {
-    public function insert(Category $category): Category;
-    public function findById(string $id): Category;
+    public function insert(Genre $genre): Genre;
+    public function findById(string $id): Genre;
     public function findAll(string $filter = '', $order = 'DESC'): array;
     public function paginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPage = 15): PaginationInterface;
-    public function update(Category $category): Category;
+    public function update(Genre $genre): Genre;
     public function delete(string $id): bool;
 }

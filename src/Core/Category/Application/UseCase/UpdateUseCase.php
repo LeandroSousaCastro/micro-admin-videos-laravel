@@ -6,11 +6,11 @@ use Core\Category\Application\Dto\{
     UpdateInputDto,
     UpdateOutputDto
 };
-use Core\Category\Domain\Repository\RepositoryInterface;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 
 class UpdateUseCase
 {
-    public function __construct(protected RepositoryInterface $repository)
+    public function __construct(protected CategoryRepositoryInterface $repository)
     {
     }
 
