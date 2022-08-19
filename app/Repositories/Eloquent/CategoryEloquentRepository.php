@@ -12,9 +12,8 @@ use Core\Seedwork\Domain\Repository\PaginationInterface;
 class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
 {
 
-    public function __construct(CategoryModel $model)
+    public function __construct(protected CategoryModel $model)
     {
-        $this->model = $model;
     }
 
     public function insert(EntityCategory $category): EntityCategory
@@ -91,7 +90,7 @@ class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
             throw new NotFoundException("Category not found for id: {$id}");
         }
 
-        $result = $category->delete();    
+        $result = $category->delete();
         $category->refresh();
         return $result;
     }
@@ -104,7 +103,7 @@ class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
             description: $data->description,
         );
         ((bool) $data->is_active) ? $entity->activate() : $entity->deactivate();
-        
+
         return $entity;
     }
 }

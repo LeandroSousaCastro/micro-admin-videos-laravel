@@ -79,16 +79,26 @@ class CategoryEloquentRepositoryTest extends TestCase
             id: $category->id,
             name: 'Category'
         );
+
+        $entity->update(
+            name: 'Category Update'
+        );
+
         $response = $this->repository->update($entity);
         $this->assertInstanceOf(EntityCategory::class, $response);
         $this->assertEquals($category->id, $response->id());
-        $this->assertEquals('Category', $response->name);
+        $this->assertEquals('Category Update', $response->name);
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Category Update'
+        ]);
     }
 
     public function testUpdateNotFound()
     {
         $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('Category not found for id: id fake');
         $entity = new EntityCategory(
+            id: 'id fake',
             name: 'Category'
         );
         $this->repository->update($entity);

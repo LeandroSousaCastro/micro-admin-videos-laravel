@@ -30,9 +30,11 @@ class Genre extends Entity
         $this->validate();
     }
 
-    public function addCategory(string $categoryId): void
+    public function addCategory(array|string $categoryId): void
     {
-        array_push($this->categoriesId, $categoryId);
+        (is_array($this->categoriesId))
+            ? $this->categoriesId = $categoryId
+            : array_push($this->categoriesId, $categoryId);
     }
 
     public function removeCategory(string $categoryId): void
