@@ -31,6 +31,7 @@ class GetUseCaseUnitTest extends TestCase
 
         $mockRepository = Mockery::mock(stdClass::class, GenreRepositoryInterface::class);
         $mockRepository->shouldReceive('findById')
+            ->once()
             ->with($id)
             ->andReturn($mockEntity);
 
@@ -46,7 +47,7 @@ class GetUseCaseUnitTest extends TestCase
         $this->assertEquals($id, $responseUseCase->id);
         $this->assertEquals('name', $responseUseCase->name);
         $this->assertTrue($responseUseCase->is_active);
-        $mockRepository->shouldHaveReceived('findById')->once();
+        $mockRepository->shouldHaveReceived()->findById($id);
 
         Mockery::close();
     }

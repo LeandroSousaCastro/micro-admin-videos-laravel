@@ -43,7 +43,9 @@ class ListUseCaseUnitTest extends TestCase
         $response = $useCase->execute($mockDtoInput);
 
         $this->assertInstanceOf(ListOutputDto::class, $response);
-        $mockRepository->shouldHaveReceived('paginate')->once();
+        $mockRepository->shouldHaveReceived()->paginate(
+            'teste', 'desc', 1, 15
+        );
 
         Mockery::close();
     }

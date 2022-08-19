@@ -93,7 +93,7 @@ class CreateUseCaseUnitTest extends TestCase
     private function mockCategoryRepository()
     {
         $mockCategoryRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $mockCategoryRepository->shouldReceive('getIdsListIds')->andReturn([$this->uuid]);
+        $mockCategoryRepository->shouldReceive('getIdsListIds')->once()->andReturn([$this->uuid]);
 
         return $mockCategoryRepository;
     }

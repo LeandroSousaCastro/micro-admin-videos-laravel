@@ -30,10 +30,8 @@ class DeleteUseCaseUnitTest extends TestCase
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
         $mockRepository = Mockery::mock(stdClass::class, GenreRepositoryInterface::class);
-        $mockRepository->shouldReceive('findById')
-            ->with($id)
-            ->andReturn($mockEntity);
         $mockRepository->shouldReceive('delete')
+            ->times(1)
             ->with($id)
             ->andReturn(true);
 
@@ -47,8 +45,6 @@ class DeleteUseCaseUnitTest extends TestCase
         $this->assertInstanceOf(DeleteUseCase::class, $useCase);
         $this->assertInstanceOf(DeleteOutputDto::class, $responseUseCase);
         $mockRepository->shouldHaveReceived('delete')->once();
-
-        Mockery::close();
     }
 
     public function testFailDeleteUseCase()
