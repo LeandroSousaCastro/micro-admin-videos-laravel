@@ -2,7 +2,7 @@
 
 namespace Core\Seedwork\Domain\Entity\Traits;
 
-use Exception;
+use Throwable;
 
 trait MethodsMagicsTrait
 {
@@ -13,7 +13,7 @@ trait MethodsMagicsTrait
         }
 
         $className = get_class($this);
-        throw new Exception("Property {$property} not found in class {$className}");
+        throw new Throwable("Property {$property} not found in class {$className}");
     }
 
     public function id(): string
