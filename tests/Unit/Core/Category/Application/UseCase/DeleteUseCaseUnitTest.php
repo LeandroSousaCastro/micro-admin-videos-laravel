@@ -17,20 +17,20 @@ class DeleteUseCaseUnitTest extends TestCase
 {
     public function testUpdateCategory()
     {
-        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $this->mockRepository->shouldReceive('delete')->andReturn(true);
+        $mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
+        $mockRepository->shouldReceive('delete')->andReturn(true);
 
         $uuid = (string) Uuid::uuid4()->toString();
-        $this->mockInputDto = Mockery::mock(DeleteInputDto::class, [
+        $mockInputDto = Mockery::mock(DeleteInputDto::class, [
             $uuid
         ]);
 
-        $useCase = new DeleteUseCase($this->mockRepository);
-        $responseUseCase = $useCase->execute($this->mockInputDto);
+        $useCase = new DeleteUseCase($mockRepository);
+        $responseUseCase = $useCase->execute($mockInputDto);
 
         $this->assertInstanceOf(DeleteOutputDto::class, $responseUseCase);
         $this->assertTrue($responseUseCase->isSuccess);
-        $this->mockRepository->shouldHaveReceived('delete')->once();        
+        $mockRepository->shouldHaveReceived('delete')->once();        
 
         Mockery::close();
     }

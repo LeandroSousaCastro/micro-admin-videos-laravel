@@ -20,24 +20,24 @@ class GetUseCaseUnitTest extends TestCase
         $id = Uuid::uuid4()->toString();
         $name = 'name';
 
-        $this->mockEntity = Mockery::mock(Category::class, [
+        $mockEntity = Mockery::mock(Category::class, [
             $id,
             $name
         ]);
-        $this->mockEntity->shouldReceive('id')->andReturn($id);
-        $this->mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
+        $mockEntity->shouldReceive('id')->andReturn($id);
+        $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
-        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $this->mockRepository->shouldReceive('findById')
+        $mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
+        $mockRepository->shouldReceive('findById')
             ->with($id)
-            ->andReturn($this->mockEntity);
+            ->andReturn($mockEntity);
 
-        $this->mockInputDto = Mockery::mock(GetInputDto::class, [
+        $mockInputDto = Mockery::mock(GetInputDto::class, [
             $id
         ]);
 
-        $useCase = new GetUseCase($this->mockRepository);
-        $responseUseCase = $useCase->execute($this->mockInputDto);
+        $useCase = new GetUseCase($mockRepository);
+        $responseUseCase = $useCase->execute($mockInputDto);
 
         $this->assertInstanceOf(GetUseCase::class, $useCase);
         $this->assertInstanceOf(GetOutputDto::class, $responseUseCase);
@@ -45,7 +45,7 @@ class GetUseCaseUnitTest extends TestCase
         $this->assertEquals('name', $responseUseCase->name);
         $this->assertEquals('', $responseUseCase->description);
         $this->assertTrue($responseUseCase->is_active);
-        $this->mockRepository->shouldHaveReceived('findById')->once();
+        $mockRepository->shouldHaveReceived('findById')->once();
     }
 
     protected function tearDown(): void

@@ -30,7 +30,7 @@ class UpdateUseCaseUnitTest extends TestCase
         $this->assertInstanceOf(UpdateOutputDto::class, $response);
     }
 
-    public function test_update_categories_notfound()
+    public function testUpdateCategoriesNotFound()
     {
         $this->expectException(NotFoundException::class);
 

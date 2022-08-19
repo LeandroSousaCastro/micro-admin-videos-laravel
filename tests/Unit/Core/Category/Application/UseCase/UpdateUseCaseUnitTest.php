@@ -22,28 +22,28 @@ class UpdateUseCaseUnitTest extends TestCase
         $categoryName = 'Name';
         $categoryDesc = 'Desc';
 
-        $this->mockEntity = Mockery::mock(Category::class, [
+        $mockEntity = Mockery::mock(Category::class, [
             $uuid, $categoryName, $categoryDesc
         ]);
-        $this->mockEntity->shouldReceive('update');
-        $this->mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
+        $mockEntity->shouldReceive('update');
+        $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
-        $this->mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
-        $this->mockRepository->shouldReceive('findById')->andReturn($this->mockEntity);
-        $this->mockRepository->shouldReceive('update')->andReturn($this->mockEntity);
+        $mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
+        $mockRepository->shouldReceive('findById')->andReturn($mockEntity);
+        $mockRepository->shouldReceive('update')->andReturn($mockEntity);
 
 
-        $this->mockInputDto = Mockery::mock(UpdateInputDto::class, [
+        $mockInputDto = Mockery::mock(UpdateInputDto::class, [
             $uuid,
             'new name',
         ]);
 
-        $useCase = new UpdateUseCase($this->mockRepository);
-        $responseUseCase = $useCase->execute($this->mockInputDto);
+        $useCase = new UpdateUseCase($mockRepository);
+        $responseUseCase = $useCase->execute($mockInputDto);
 
         $this->assertInstanceOf(UpdateOutputDto::class, $responseUseCase);
-        $this->mockRepository->shouldHaveReceived('findById');
-        $this->mockRepository->shouldHaveReceived('update');
+        $mockRepository->shouldHaveReceived('findById');
+        $mockRepository->shouldHaveReceived('update');
 
         Mockery::close();
     }
