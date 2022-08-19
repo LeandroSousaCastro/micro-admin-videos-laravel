@@ -50,4 +50,29 @@ class DeleteUseCaseUnitTest extends TestCase
 
         Mockery::close();
     }
+
+    public function testFailDeleteUseCase()
+    {
+        $uuid = (string) Uuid::uuid4();
+
+        $mockRepository = Mockery::mock(stdClass::class, GenreRepositoryInterface::class);
+        $mockRepository->shouldReceive('delete')
+                        ->times(1)
+                        ->with($uuid)
+                        ->andReturn(false);
+
+        $mockInputDto = Mockery::mock(DeleteInputDto::class, [$uuid]);
+
+        $useCase = new DeleteUseCase($mockRepository);
+        $response = $useCase->execute($mockInputDto);
+
+        $this->assertFalse($response->isSuccess);
+        $mockRepository->shouldHaveReceived('delete')->once();
+    }
+
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
+    }
 }

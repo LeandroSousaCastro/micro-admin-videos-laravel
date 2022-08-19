@@ -20,7 +20,7 @@ use stdClass;
 
 class UpdateUseCaseUnitTest extends TestCase
 {
-    public function test_update()
+    public function testUpdate()
     {
         $uuid = (string) Uuid::uuid4();
 
