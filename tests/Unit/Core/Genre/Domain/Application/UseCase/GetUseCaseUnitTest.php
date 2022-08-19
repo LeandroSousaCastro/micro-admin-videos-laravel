@@ -23,6 +23,7 @@ class GetUseCaseUnitTest extends TestCase
         $this->mockEntity = Mockery::mock(Genre::class, [
             $id,
             $name,
+            [],
             true
         ]);
         $this->mockEntity->shouldReceive('id')->andReturn($id);

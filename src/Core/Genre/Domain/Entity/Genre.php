@@ -15,8 +15,8 @@ class Genre extends Entity
     public function __construct(
         protected Uuid|string $id = '',
         protected string $name = '',
-        protected bool $isActive = false,
         protected array $categoriesId = [],
+        protected bool $isActive = false,
         protected DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
