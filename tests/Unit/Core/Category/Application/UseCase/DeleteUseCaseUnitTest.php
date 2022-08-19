@@ -30,15 +30,7 @@ class DeleteUseCaseUnitTest extends TestCase
 
         $this->assertInstanceOf(DeleteOutputDto::class, $responseUseCase);
         $this->assertTrue($responseUseCase->isSuccess);
-
-        /**
-         * Spies
-         */
-        $this->spy = Mockery::spy(stdClass::class, CategoryRepositoryInterface::class);
-        $this->spy->shouldReceive('delete')->andReturn(true);
-        $useCase = new DeleteUseCase($this->spy);
-        $useCase->execute($this->mockInputDto);
-        $this->mockRepository->shouldHaveReceived('delete')->once();
+        $this->mockRepository->shouldHaveReceived('delete')->once();        
 
         Mockery::close();
     }
