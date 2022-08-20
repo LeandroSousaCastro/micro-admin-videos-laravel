@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Repositories\Transaction\DbTransaction;
 use Core\Seedwork\Application\Interfaces\DbTransactionInterface;
 use App\Repositories\Eloquent\CategoryEloquentRepository;
-use Core\Category\Domain\Repository\CategoryRepositoryInterface as CategoryCategoryRepositoryInterface;
+use App\Repositories\Eloquent\GenreEloquentRepository;
+use Core\Category\Domain\Repository\CategoryRepositoryInterface;
+use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -18,7 +20,12 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton(
-            CategoryCategoryRepositoryInterface::class, CategoryEloquentRepository::class
+            CategoryRepositoryInterface::class, CategoryEloquentRepository::class
+
+        );
+
+        $this->app->singleton(
+            GenreRepositoryInterface::class, GenreEloquentRepository::class
         );
 
         /**
