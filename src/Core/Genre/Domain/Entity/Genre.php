@@ -32,9 +32,7 @@ class Genre extends Entity
 
     public function addCategory(array|string $categoryId): void
     {
-        (is_array($this->categoriesId))
-            ? $this->categoriesId = $categoryId
-            : array_push($this->categoriesId, $categoryId);
+        array_push($this->categoriesId, $categoryId);
     }
 
     public function removeCategory(string $categoryId): void

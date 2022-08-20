@@ -4,39 +4,45 @@ namespace Tests\Feature\Core\Genre\Application\UseCase;
 
 use App\Models\Genre as ModelGenre;
 use App\Models\Category as ModelCategory;
-use App\Repositories\Eloquent\CategoryEloquentRepository;
-use App\Repositories\Eloquent\GenreEloquentRepository;
+use App\Repositories\Eloquent\{
+    CategoryEloquentRepository,
+    GenreEloquentRepository
+};
 use App\Repositories\Transaction\DbTransaction;
-use Core\Genre\Application\UseCase\CreateUseCase as GenreCreateUseCase;
-use Core\Genre\Application\Dto\CreateInputDto as GenreCreateInputDto;
+use Core\Genre\Application\UseCase\UpdateUseCase as GenreUpdateUseCase;
+use Core\Genre\Application\Dto\UpdateInputDto as GenreUpdateInputDto;
+use Core\Genre\Application\Dto\UpdateOutputDto;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Tests\TestCase;
 
-class CreateUseCaseTest extends TestCase
+class UpdateUseCaseTest extends TestCase
 {
     public function testCreate()
     {
         $repository = new GenreEloquentRepository(new ModelGenre());
         $repositoryCategory = new CategoryEloquentRepository(new ModelCategory());
-        $useCase = new GenreCreateUseCase(
+        $useCase = new GenreUpdateUseCase(
             $repository,
             $repositoryCategory,
             new DbTransaction()
         );
 
+        $genre = ModelGenre::factory()->create();
+
         $categories = ModelCategory::factory()->count(10)->create();
         $categoriesIds = $categories->pluck('id')->toArray();
 
         $response = $useCase->execute(
-            new GenreCreateInputDto(
-                name: 'Genre',
+            new GenreUpdateInputDto(
+                id: $genre->id,
+                name: 'New Genre',
                 categoriesId: $categoriesIds
             )
         );
-        $this->assertEquals('Genre', $response->name);
-        $this->assertNotNull($response->id);
+
+        $this->assertInstanceOf(UpdateOutputDto::class, $response);
         $this->assertDatabaseHas('genres', [
-            'name' => 'Genre'
+            'name' => 'New Genre',
         ]);
         $this->assertDatabaseCount('category_genre', 10);
     }
@@ -47,18 +53,20 @@ class CreateUseCaseTest extends TestCase
         $this->expectExceptionMessage('Categories fakeId, fakeId2 not found');
         $repository = new GenreEloquentRepository(new ModelGenre());
         $repositoryCategory = new CategoryEloquentRepository(new ModelCategory());
-        $useCase = new GenreCreateUseCase(
+        $useCase = new GenreUpdateUseCase(
             $repository,
             $repositoryCategory,
             new DbTransaction()
         );
 
+        $genre = ModelGenre::factory()->create();
         $categories = ModelCategory::factory()->count(10)->create();
         $categoriesIds = $categories->pluck('id')->toArray();
         array_push($categoriesIds, 'fakeId', 'fakeId2');
 
         $useCase->execute(
-            new GenreCreateInputDto(
+            new GenreUpdateInputDto(
+                id: $genre->id,
                 name: 'Genre',
                 categoriesId: $categoriesIds
             )
@@ -69,18 +77,20 @@ class CreateUseCaseTest extends TestCase
     {
         $repository = new GenreEloquentRepository(new ModelGenre());
         $repositoryCategory = new CategoryEloquentRepository(new ModelCategory());
-        $useCase = new GenreCreateUseCase(
+        $useCase = new GenreUpdateUseCase(
             $repository,
             $repositoryCategory,
             new DbTransaction()
         );
 
+        $genre = ModelGenre::factory()->create();
         $categories = ModelCategory::factory()->count(10)->create();
         $categoriesIds = $categories->pluck('id')->toArray();
 
         try {
             $useCase->execute(
-                new GenreCreateInputDto(
+                new GenreUpdateInputDto(
+                    id: $genre->id,
                     name: 'Genre',
                     categoriesId: $categoriesIds
                 )

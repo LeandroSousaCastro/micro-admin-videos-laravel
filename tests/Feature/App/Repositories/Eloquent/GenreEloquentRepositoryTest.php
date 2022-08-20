@@ -63,7 +63,9 @@ class GenreEloquentRepositoryTest extends TestCase
         );
         $categories = Category::factory()->count(4)->create();
         $categoriesId = $categories->pluck('id')->toArray();
-        $entity->addCategory($categoriesId);
+        foreach ($categoriesId as $categoryId) {
+            $entity->addCategory($categoryId);
+        }
         $response = $this->repository->insert($entity);
 
         $this->assertEquals($categoriesId, $entity->categoriesId);
