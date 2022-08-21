@@ -19,9 +19,10 @@ class UpdateUseCase
     {
         $castMember = $this->repository->findById($input->id);
 
+
         $castMember->update(
             name: $input->name,
-            type: CastMemberType::from($input->type),
+            type: $input->type === 0 ? $castMember->type : CastMemberType::from($input->type),
         );
 
         $castMemberDb = $this->repository->update($castMember);
