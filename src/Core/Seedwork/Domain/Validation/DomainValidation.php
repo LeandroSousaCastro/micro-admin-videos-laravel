@@ -6,7 +6,7 @@ use Core\Seedwork\Domain\Exception\EntityValidationException;
 
 class DomainValidation
 {
-    public static function notNull(string $value, string $exceptMessage = null): void
+    public static function notNull(mixed $value, string $exceptMessage = null): void
     {
         if (empty($value)) {
             throw new EntityValidationException($exceptMessage ?? "Should not be empty or null");
