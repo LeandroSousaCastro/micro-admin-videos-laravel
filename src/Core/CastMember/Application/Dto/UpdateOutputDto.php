@@ -7,7 +7,7 @@ class UpdateOutputDto
     public function __construct(
         public string $id,
         public string $name,
-        public bool $is_active,
+        public int $type,
         public string $created_at = ''
     ) {
     }

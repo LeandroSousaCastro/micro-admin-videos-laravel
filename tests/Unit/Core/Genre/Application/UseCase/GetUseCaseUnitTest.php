@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Genre\Domain\Application\UseCase;
+namespace Tests\Unit\Core\Genre\Application\UseCase;
 
 use Core\Genre\Application\Dto\{
     GetInputDto,

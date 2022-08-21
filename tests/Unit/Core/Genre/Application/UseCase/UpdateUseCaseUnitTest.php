@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\UseCase\Genre;
+namespace Tests\Unit\Core\Genre\Application\UseCase;
 
 use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Core\Genre\Application\Dto\{

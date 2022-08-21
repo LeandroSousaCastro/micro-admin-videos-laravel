@@ -43,9 +43,7 @@ class CastMemberUnitTest extends TestCase
     {
         $this->expectException(EntityValidationException::class);
         $this->expectExceptionMessage('Should not be empty or null');
-        new CastMember(
-            name: 'Name',
-        );
+        (new CastMember(name: 'Name'));
     }
 
     public function testEntityExceptionMotNull()

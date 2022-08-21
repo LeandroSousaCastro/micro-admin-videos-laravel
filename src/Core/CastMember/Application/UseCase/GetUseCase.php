@@ -18,9 +18,9 @@ class GetUseCase
     {
         $genre = $this->repository->findById($input->id);
         return new GetOutputDto(
-            id: $genre->id(),
+            id: $genre->id,
             name: $genre->name,
-            type: $genre->type,
+            type: $genre->type->value,
             created_at: $genre->createdAt()
         );
     }

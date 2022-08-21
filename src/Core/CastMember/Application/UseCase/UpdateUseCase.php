@@ -6,6 +6,7 @@ use Core\CastMember\Application\Dto\{
     UpdateInputDto,
     UpdateOutputDto
 };
+use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
 
 class UpdateUseCase
@@ -18,23 +19,18 @@ class UpdateUseCase
     {
         $castMember = $this->repository->findById($input->id);
 
-        try {
-            $castMember->update(
-                name: $input->name,
-                type: $input->type,
-            );
+        $castMember->update(
+            name: $input->name,
+            type: CastMemberType::from($input->type),
+        );
 
-            $castMemberDb = $this->repository->update($castMember);
+        $castMemberDb = $this->repository->update($castMember);
 
-            return new UpdateOutputDto(
-                id: (string) $castMemberDb->id,
-                name: $castMemberDb->name,
-                is_active: $castMemberDb->isActive,
-                created_at: $castMemberDb->createdAt(),
-            );
-        } catch (\Throwable $th) {
-            $this->transaction->rollback();
-            throw $th;
-        }
+        return new UpdateOutputDto(
+            id: (string) $castMemberDb->id,
+            name: $castMemberDb->name,
+            type: $castMemberDb->type->value,
+            created_at: $castMemberDb->createdAt(),
+        );
     }
 }

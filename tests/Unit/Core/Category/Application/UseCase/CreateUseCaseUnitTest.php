@@ -25,7 +25,7 @@ class CreateUseCaseUnitTest extends TestCase
             $uuid,
             $name
         ]);
-        $mockEntity->shouldReceive('constr')->andReturn($uuid);
+        $mockEntity->shouldReceive('id')->andReturn($uuid);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
         $mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);

@@ -8,27 +8,14 @@ use Core\Category\Application\Dto\{
 };
 use Core\Category\Application\UseCase\ListUseCase;
 use Core\Category\Domain\Repository\CategoryRepositoryInterface;
-use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Tests\Unit\Core\Seedwork\Application\UseCase\UseCaseTrait;
 
 class ListUseCaseUnitTest extends TestCase
 {
-    protected function mockPagination(array $items = [])
-    {
-        $this->mockPagination = Mockery::mock(stdClass::class, PaginationInterface::class);
-        $this->mockPagination->shouldReceive('items')->andReturn($items);
-        $this->mockPagination->shouldReceive('total')->andReturn(0);
-        $this->mockPagination->shouldReceive('lastPage')->andReturn(0);
-        $this->mockPagination->shouldReceive('firstPage')->andReturn(0);
-        $this->mockPagination->shouldReceive('currentPage')->andReturn(0);
-        $this->mockPagination->shouldReceive('perPage')->andReturn(0);
-        $this->mockPagination->shouldReceive('to')->andReturn(0);
-        $this->mockPagination->shouldReceive('from')->andReturn(0);
-
-        return $this->mockPagination;
-    }
+    use UseCaseTrait;
 
     public function testListCategoriesEmpty()
     {

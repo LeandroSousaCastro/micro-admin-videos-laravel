@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Unit\Core\Genre\Application\UseCase;
+namespace Tests\Unit\Core\CastMember\Application\UseCase;
 
-use Core\Genre\Application\Dto\{
+use Core\CastMember\Application\Dto\{
     ListInputDto,
     ListOutputDto
 };
-use Core\Genre\Application\UseCase\ListUseCase;
-use Core\Genre\Domain\Repository\GenreRepositoryInterface;
+use Core\CastMember\Application\UseCase\ListUseCase;
+use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -17,9 +17,9 @@ class ListUseCaseUnitTest extends TestCase
 {
     use UseCaseTrait;
 
-    public function testListUseCase()
+    public function testList()
     {
-        $mockRepository = Mockery::mock(stdClass::class, GenreRepositoryInterface::class);
+        $mockRepository = Mockery::mock(stdClass::class, CastMemberRepositoryInterface::class);
         $mockRepository->shouldReceive('paginate')->once()->andReturn($this->mockPagination());
 
         $mockDtoInput = Mockery::mock(ListInputDto::class, [

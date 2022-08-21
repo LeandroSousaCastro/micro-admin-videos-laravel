@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Genre\Domain\Application\UseCase;
+namespace Tests\Unit\Core\Genre\Application\UseCase;
 
 use Core\Genre\Application\Dto\{
     DeleteInputDto,
@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class DeleteUseCaseUnitTest extends TestCase
 {
-    public function testDeleteUseCase()
+    public function testDelete()
     {
         $id = Uuid::uuid4()->toString();
         $name = 'name';
@@ -47,7 +47,7 @@ class DeleteUseCaseUnitTest extends TestCase
         $mockRepository->shouldHaveReceived('delete')->once();
     }
 
-    public function testFailDeleteUseCase()
+    public function testFailDelete()
     {
         $uuid = (string) Uuid::uuid4();
 

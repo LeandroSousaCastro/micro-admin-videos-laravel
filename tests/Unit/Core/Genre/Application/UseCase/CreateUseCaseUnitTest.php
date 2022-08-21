@@ -29,7 +29,7 @@ class CreateUseCaseUnitTest extends TestCase
         $this->name = 'name';
     }
 
-    public function testCreateNewGenre()
+    public function testCreate()
     {
         $mockRepository = $this->mockRepository();
         $useCase = new CreateUseCase(

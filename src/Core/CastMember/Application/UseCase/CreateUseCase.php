@@ -8,29 +8,28 @@ use Core\CastMember\Application\Dto\{
     CreateOutputDto
 };
 use Core\CastMember\Domain\Entity\CastMember;
+use Core\CastMember\Domain\Enum\CastMemberType;
 
 class CreateUseCase
 {
-    public function __construct(protected CastMemberRepositoryInterface $repository) {
+    public function __construct(protected CastMemberRepositoryInterface $repository)
+    {
     }
 
     public function execute(CreateInputDto $input): CreateOutputDto
     {
-        try {
-           $castMember = new CastMember(
-                name: $input->name,
-                type: $input->type
-            );
+        $entity = new CastMember(
+            name: $input->name,
+            type: CastMemberType::from($input->type)
+        );
 
-            return new CreateOutputDto(
-                id: $castMember->id,
-                name: $castMember->name,
-                type: $castMember->type,
-                created_at: $castMember->createdAt()
-            );
-        } catch (\Throwable $th) {
-            $this->transaction->rollBack();
-            throw $th;
-        }
+        $entityDb = $this->repository->insert($entity);
+
+        return new CreateOutputDto(
+            id: $entityDb->id,
+            name: $entityDb->name,
+            type: $entityDb->type->value,
+            created_at: $entityDb->createdAt()
+        );
     }
 }
