@@ -50,7 +50,7 @@ class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
                     $query->where('name', 'LIKE', "%{$filter}%");
                 }
             })
-            ->orderBy('id', $order)
+            ->orderBy('name', $order)
             ->get();
         return $categories->toArray();
     }
@@ -61,7 +61,7 @@ class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
         if ($filter) {
             $query = $query->where('name', 'LIKE', "%{$filter}%");
         }
-        $query = $query->orderBy('id', $order);
+        $query = $query->orderBy('name', $order);
         $paginator = $query->paginate();
 
         return new PaginationPresenter($paginator);

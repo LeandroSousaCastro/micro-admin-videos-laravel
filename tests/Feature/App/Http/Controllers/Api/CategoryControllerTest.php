@@ -21,7 +21,7 @@ use Illuminate\Http\Response;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
-class CategoryControllerUnitTest extends TestCase
+class CategoryControllerTest extends TestCase
 {
     protected $repository;
     protected $controller;
@@ -42,7 +42,7 @@ class CategoryControllerUnitTest extends TestCase
         $this->assertArrayHasKey('meta', $response->additional);
     }
 
-    public function testShow() 
+    public function testShow()
     {
         $category = ModelCategory::factory()->create();
 
@@ -52,12 +52,12 @@ class CategoryControllerUnitTest extends TestCase
         );
 
         $this->assertInstanceOf(JsonResponse::class, $response);
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());        
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    public function testStore() 
+    public function testStore()
     {
-        $useCase = new CategoryCreateUseCase($this->repository);        
+        $useCase = new CategoryCreateUseCase($this->repository);
         $request = new StoreCategoryRequest();
         $request->headers->set('content-type', 'application/json');
         $request->setJson(new ParameterBag([
@@ -70,7 +70,7 @@ class CategoryControllerUnitTest extends TestCase
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }
 
-    public function testUpdate() 
+    public function testUpdate()
     {
         $category = ModelCategory::factory()->create();
 
@@ -90,7 +90,7 @@ class CategoryControllerUnitTest extends TestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 
-    public function testDelete() 
+    public function testDelete()
     {
         $category = ModelCategory::factory()->create();
 

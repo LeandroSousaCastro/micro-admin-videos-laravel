@@ -41,22 +41,22 @@ class GenreEloquentRepository implements GenreRepositoryInterface
         return $this->toGenre($genre);
     }
 
-    public function getIdsListIds(array $categoriesId = []): array
+    public function getIdsListIds(array $genresId = []): array
     {
-        return $this->model->whereIn('id', $categoriesId)->pluck('id')->toArray();
+        return $this->model->whereIn('id', $genresId)->pluck('id')->toArray();
     }
 
     public function findAll(string $filter = '', $order = 'DESC'): array
     {
-        $categories = $this->model
+        $genres = $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
                     $query->where('name', 'LIKE', "%{$filter}%");
                 }
             })
-            ->orderBy('id', $order)
+            ->orderBy('name', $order)
             ->get();
-        return $categories->toArray();
+        return $genres->toArray();
     }
 
     public function paginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPage = 15): PaginationInterface
@@ -65,7 +65,7 @@ class GenreEloquentRepository implements GenreRepositoryInterface
         if ($filter) {
             $query = $query->where('name', 'LIKE', "%{$filter}%");
         }
-        $query = $query->orderBy('created_at', $order);
+        $query = $query->orderBy('name', $order);
         $paginator = $query->paginate();
 
         return new PaginationPresenter($paginator);

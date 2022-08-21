@@ -6,6 +6,7 @@
         "Project",
         "Use Case",
         "Tests",
-        "Controllers"
+        "Controllers",
+        "Repository"
     ]
 }
