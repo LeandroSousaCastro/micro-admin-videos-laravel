@@ -68,6 +68,10 @@ class CategoryControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Category name',
+            'description' => 'Category description',
+        ]);
     }
 
     public function testUpdate()
@@ -88,6 +92,9 @@ class CategoryControllerTest extends TestCase
 
         $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertDatabaseHas('categories', [
+            'name' => 'Category name',
+        ]);
     }
 
     public function testDelete()
@@ -99,5 +106,8 @@ class CategoryControllerTest extends TestCase
             id: $category->id
         );
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertSoftDeleted('categories', [
+            'id' => $category->id,
+        ]);
     }
 }
