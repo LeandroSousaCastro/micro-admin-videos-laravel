@@ -2,22 +2,26 @@
 
 namespace Core\Seedwork\Domain\Validation;
 
-use Core\Seedwork\Domain\Entity\Entity;
+use Core\Seedwork\Domain\Notification\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class LaravelValidator implements ValidatorInterface
 {
-    public function validate(Entity $entity, string $context, array $rules): void
-    {
-        $data = $entity->toArray();
+    public function __construct(
+        protected Notification $notification,
+        protected Validator $validator
+    ) {
+    }
 
-        $validator = Validator::make($data, $rules);
+    public function validate(array $data, string $context, array $rules): void
+    {
+        $validator = $this->validator::make($data, $rules);
 
         if ($validator->fails()) {
             foreach ($validator->errors()->messages() as $error) {
-                $entity->notification->addError([
+                $this->notification->addError([
                     'context' => $context,
-                    'message' => $error[0]
+                    'message' => current($error)
                 ]);
             }
         }

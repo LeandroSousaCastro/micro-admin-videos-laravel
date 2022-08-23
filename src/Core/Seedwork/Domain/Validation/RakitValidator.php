@@ -2,27 +2,31 @@
 
 namespace Core\Seedwork\Domain\Validation;
 
-use Core\Seedwork\Domain\Entity\Entity;
 use Core\Seedwork\Domain\Exception\NotificationException;
+use Core\Seedwork\Domain\Notification\Notification;
 use Rakit\Validation\Validator;
 
 class RakitValidator implements ValidatorInterface
 {
-    public function validate(Entity $entity, string $context, array $rules): void
-    {
-        $data = $entity->toArray();
+    public function __construct(
+        protected Notification $notification,
+        protected Validator $validator
+    ) {
+    }
 
-        $validation = (new Validator())->validate($data, $rules);
+    public function validate(array $data, string $context, array $rules): void
+    {
+        $validation = $this->validator->validate($data, $rules);
 
         if ($validation->fails()) {
             foreach ($validation->errors()->all() as $error) {
-                $entity->notification->addError([
+                $this->notification->addError([
                     'context' => $context,
                     'message' => $error
                 ]);
             }
             throw new NotificationException(
-                $entity->notification->messages($context)
+                $this->notification->messages($context)
             );
         }
     }

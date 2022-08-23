@@ -14,12 +14,6 @@ class Video extends Entity
     protected array $categoriesId = [];
     protected array $genresId = [];
     protected array $castMembersId = [];
-    protected array $rules = [
-        'title' => 'required|min:3|max:255',
-        'description' => 'required|min:3|max:255',
-        'yearLaunched' => 'required|integer',
-        'duration' => 'required|integer',
-    ];
 
     public function __construct(
         protected Uuid|string $id = '',
@@ -98,6 +92,16 @@ class Video extends Entity
 
     protected function validation()
     {
-        ValidatorFactory::create()->validate($this, 'video', $this->rules);
+        $rules = [
+            'title' => 'required|min:3|max:255',
+            'description' => 'required|min:3|max:255',
+            'yearLaunched' => 'required|integer',
+            'duration' => 'required|integer',
+        ];
+        ValidatorFactory::create()->validate(
+            $this->toArray(),
+            'video',
+            $rules
+        );
     }
 }
