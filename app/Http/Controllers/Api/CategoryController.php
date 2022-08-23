@@ -3,35 +3,41 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCategoryRequest;
-use App\Http\Requests\UpdateCategoryRequest;
-use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Request;
-use Core\Category\Application\UseCase\ListUseCase as CategoryListUseCase;
-use Core\Category\Application\Dto\ListInputDto as CategoryListInputDto;
-use Core\Category\Application\UseCase\CreateUseCase as CategoryCreateUseCase;
-use Core\Category\Application\Dto\CreateInputDto as CategoryCreateInputDto;
-use Core\Category\Application\Dto\DeleteInputDto as CategoryDeleteInputDto;
-use Core\Category\Application\UseCase\GetUseCase as CategoryGetUseCase;
-use Core\Category\Application\Dto\GetInputDto as CategoryGetInputDto;
-use Core\Category\Application\UseCase\UpdateUseCase as CategoryUpdateUseCase;
-use Core\Category\Application\Dto\UpdateInputDto as CategoryUpdateInputDto;
-use Core\Category\Application\UseCase\DeleteUseCase as CategoryDeleteUseCase;
+use App\Http\Requests\{
+    StoreCategoryRequest,
+    UpdateCategoryRequest
+};
+use Core\Category\Application\Dto\{
+    ListInputDto,
+    CreateInputDto,
+    DeleteInputDto,
+    GetInputDto,
+    UpdateInputDto
+};
+use Core\Category\Application\UseCase\{
+    GetUseCase,
+    ListUseCase,
+    CreateUseCase,
+    UpdateUseCase,
+    DeleteUseCase
+};
+use App\Http\Resources\CategoryResource;
 use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
-    public function index(Request $request, CategoryListUseCase $useCase)
+    public function index(Request $request, ListUseCase $useCase)
     {
         $response = $useCase->execute(
-            input: new CategoryListInputDto(
+            input: new ListInputDto(
                 filter: $request->get('filter', ''),
                 order: $request->get('order', 'DESC'),
                 page: (int) $request->get('page', 1),
                 totalPage: (int) $request->get('total_page', 15),
             )
         );
-        
+
         return CategoryResource::collection($response->items)
             ->additional([
                 'meta' => [
@@ -46,20 +52,20 @@ class CategoryController extends Controller
             ]);
     }
 
-    public function show(CategoryGetUseCase $useCase, $id)
+    public function show(GetUseCase $useCase, $id)
     {
         $category = $useCase->execute(
-            new CategoryGetInputDto($id)
+            new GetInputDto($id)
         );
 
         return (new CategoryResource($category))
-                    ->response();
+            ->response();
     }
 
-    public function store(StoreCategoryRequest $request, CategoryCreateUseCase $useCase)
+    public function store(StoreCategoryRequest $request, CreateUseCase $useCase)
     {
         $response = $useCase->execute(
-            input: new CategoryCreateInputDto(
+            input: new CreateInputDto(
                 name: $request->name,
                 description: $request->description ?? '',
                 isActive: (bool) $request->is_active ?? true,
@@ -67,26 +73,26 @@ class CategoryController extends Controller
         );
 
         return (new CategoryResource($response))
-                    ->response()
-                    ->setStatusCode(Response::HTTP_CREATED);
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
-    public function update(UpdateCategoryRequest $request, CategoryUpdateUseCase $useCase, $id)
+    public function update(UpdateCategoryRequest $request, UpdateUseCase $useCase, $id)
     {
         $response = $useCase->execute(
-            input: new CategoryUpdateInputDto(
+            input: new UpdateInputDto(
                 id: $id,
                 name: $request->name
             )
         );
 
         return (new CategoryResource($response))
-                    ->response();
+            ->response();
     }
 
-    public function destroy(CategoryDeleteUseCase $useCase, $id)
+    public function destroy(DeleteUseCase $useCase, $id)
     {
-        $useCase->execute(new CategoryDeleteInputDto($id));
+        $useCase->execute(new DeleteInputDto($id));
         return response()->noContent();
     }
 }
