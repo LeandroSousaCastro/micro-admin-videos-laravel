@@ -3,7 +3,6 @@
 namespace Tests\Unit\Core\Video\Domain\Entity;
 
 use Core\Video\Domain\Entity\Video;
-use Core\Seedwork\Domain\Exception\EntityValidationException;
 use Core\Seedwork\Domain\Exception\NotificationException;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Video\Domain\Enum\MediaStatus;

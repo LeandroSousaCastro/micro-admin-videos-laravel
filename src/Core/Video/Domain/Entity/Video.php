@@ -3,7 +3,7 @@
 namespace Core\Video\Domain\Entity;
 
 use Core\Seedwork\Domain\Entity\Entity;
-use Core\Seedwork\Domain\Exception\NotificationException;
+use Core\Seedwork\Domain\Validation\ValidatorFactory;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Video\Domain\Enum\Rating;
 use Core\Video\Domain\ValueObject\Image;
@@ -14,6 +14,12 @@ class Video extends Entity
     protected array $categoriesId = [];
     protected array $genresId = [];
     protected array $castMembersId = [];
+    protected array $rules = [
+        'title' => 'required|min:3|max:255',
+        'description' => 'required|min:3|max:255',
+        'yearLaunched' => 'required|integer',
+        'duration' => 'required|integer',
+    ];
 
     public function __construct(
         protected Uuid|string $id = '',
@@ -92,32 +98,6 @@ class Video extends Entity
 
     protected function validation()
     {
-        if (empty($this->title)) {
-            $this->notification->addError([
-                'context' => 'video',
-                'message' => 'Should not be empty or null'
-            ]);
-        }
-
-        if (strlen($this->title) < 3) {
-            $this->notification->addError([
-                'context' => 'video',
-                'message' => 'Invalid qtd'
-            ]);
-        }
-
-        if (strlen($this->description) < 3) {
-            $this->notification->addError([
-                'context' => 'video',
-                'message' => 'Invalid qtd'
-            ]);
-        }
-
-        if ($this->notification->hasErrors())
-        {
-            throw new NotificationException(
-                $this->notification->messages('video')
-            );
-        }
+        ValidatorFactory::create()->validate($this, 'video', $this->rules);
     }
 }
