@@ -19,10 +19,14 @@ class GetUseCaseUnitTest extends TestCase
     {
         $id = Uuid::uuid4()->toString();
         $name = 'name';
+        $description = 'teste description';
+        $isActive = false;
 
         $mockEntity = Mockery::mock(Category::class, [
-            $id,
-            $name
+            $name,
+            $description,
+            $isActive,
+            $id
         ]);
         $mockEntity->shouldReceive('id')->andReturn($id);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
@@ -43,8 +47,8 @@ class GetUseCaseUnitTest extends TestCase
         $this->assertInstanceOf(GetOutputDto::class, $responseUseCase);
         $this->assertEquals($id, $responseUseCase->id);
         $this->assertEquals('name', $responseUseCase->name);
-        $this->assertEquals('', $responseUseCase->description);
-        $this->assertTrue($responseUseCase->is_active);
+        $this->assertEquals($description, $responseUseCase->description);
+        $this->assertFalse($responseUseCase->is_active);
         $mockRepository->shouldHaveReceived('findById')->once();
     }
 

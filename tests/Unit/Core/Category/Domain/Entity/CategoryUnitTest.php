@@ -2,8 +2,9 @@
 
 namespace Tests\Unit\Core\Category\Domain\Entity;
 
+use ArgumentCountError;
 use Core\Category\Domain\Entity\Category;
-use Core\Seedwork\Domain\Exception\EntityValidationException;
+use Core\Seedwork\Domain\Exception\NotificationException;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use PHPUnit\Framework\TestCase;
 
@@ -71,15 +72,14 @@ class CategoryUnitTest extends TestCase
 
     public function testExceptionNameMotNull()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Should not be empty or null');
+        $this->expectException(ArgumentCountError::class);
         (new Category());
     }
 
     public function testExceptionNameMinLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage("The value must not be least than 2 characters");
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage("Category: The Name minimum is 3,");
         (new Category(
             name: 'a',
             description: "Category description",
@@ -89,8 +89,8 @@ class CategoryUnitTest extends TestCase
 
     public function testExceptionNameMaxLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage("The value must not be greater than 255 characters");
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage("Category: The Name maximum is 255,");
         (new Category(
             name: str_repeat('a', 256),
             description: "Category description",
@@ -100,10 +100,10 @@ class CategoryUnitTest extends TestCase
 
     public function testExceptionDescription()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage("The value must not be greater than 255 characters");
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage("Category: The Description maximum is 255,");
         (new Category(
-            name: str_repeat('a', 5),
+            name: str_repeat('a', 256),
             description: str_repeat('a', 256)
         ));
     }

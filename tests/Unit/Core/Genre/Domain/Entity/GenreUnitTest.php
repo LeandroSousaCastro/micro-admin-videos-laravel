@@ -2,10 +2,11 @@
 
 namespace Tests\Unit\Core\Genre\Domain\Entity;
 
+use ArgumentCountError;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use Core\Genre\Domain\Entity\Genre;
 use Core\Seedwork\Domain\ValueObject\Uuid;
-use Core\Seedwork\Domain\Exception\EntityValidationException;
+use Core\Seedwork\Domain\Exception\NotificationException;
 use PHPUnit\Framework\TestCase;
 
 class GenreUnitTest extends TestCase
@@ -76,31 +77,30 @@ class GenreUnitTest extends TestCase
         $this->assertEquals('Drama', $category->name);
     }
 
-    public function testEntityExceptionMotNull()
+    public function testEntityExceptionNotNull()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Should not be empty or null');
+        $this->expectException(ArgumentCountError::class);
         (new Genre());
     }
 
     public function testEntityExceptionMinLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be least than 2 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('Genre: The Name minimum is 3,');
         (new Genre(name: 'A'));
     }
 
     public function testEntityExceptionMaxLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be greater than 255 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('Genre: The Name maximum is 255,');
         (new Genre(name: str_repeat('a', 256)));
     }
 
     public function testEntityExceptionUpdateNotNull()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Should not be empty or null');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('Genre: The Name is required,');
         $genre = new Genre(
             name: 'Action'
         );
@@ -109,8 +109,8 @@ class GenreUnitTest extends TestCase
 
     public function testEntityExceptionUpdateMinLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be least than 2 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('Genre: The Name minimum is 3,');
         $genre = new Genre(
             name: 'Action'
         );
@@ -121,8 +121,8 @@ class GenreUnitTest extends TestCase
 
     public function testEntityExceptionUpdateMaxLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be greater than 255 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('Genre: The Name maximum is 255,');
         $genre = new Genre(
             name: 'Action'
         );

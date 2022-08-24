@@ -63,10 +63,10 @@ class CreateUseCaseUnitTest extends TestCase
     private function mockEntity()
     {
         $mockEntity = Mockery::mock(Genre::class, [
-            $this->uuid,
             $this->name,
             [],
-            true
+            true,
+            $this->uuid,
         ]);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 

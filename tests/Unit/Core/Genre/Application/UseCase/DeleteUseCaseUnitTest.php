@@ -21,10 +21,10 @@ class DeleteUseCaseUnitTest extends TestCase
         $name = 'name';
 
         $mockEntity = Mockery::mock(Genre::class, [
-            $id,
             $name,
             [],
-            true
+            true,
+            $id,
         ]);
         $mockEntity->shouldReceive('id')->andReturn($id);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));

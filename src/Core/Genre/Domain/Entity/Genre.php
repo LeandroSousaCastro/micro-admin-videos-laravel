@@ -4,19 +4,23 @@ namespace Core\Genre\Domain\Entity;
 
 use Core\Seedwork\Domain\Entity\Entity;
 use Core\Seedwork\Domain\Entity\Traits\ActivateDeactivateTrait;
-use Core\Seedwork\Domain\Validation\DomainValidation;
+use Core\Seedwork\Domain\Entity\Traits\ValidationTrait;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use DateTime;
 
 class Genre extends Entity
 {
-    use ActivateDeactivateTrait;
+    use ActivateDeactivateTrait, ValidationTrait;
+
+    protected $rules = [
+        'name' => 'required|min:3|max:255',
+    ];
 
     public function __construct(
-        protected Uuid|string $id = '',
-        protected string $name = '',
+        protected string $name,
         protected array $categoriesId = [],
         protected bool $isActive = false,
+        protected Uuid|string $id = '',
         protected DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
@@ -38,12 +42,5 @@ class Genre extends Entity
     public function removeCategory(string $categoryId): void
     {
         unset($this->categoriesId[array_search($categoryId, $this->categoriesId)]);
-    }
-
-    private function validate()
-    {
-        DomainValidation::notNull($this->name);
-        DomainValidation::strMaxLength($this->name);
-        DomainValidation::strMinLength($this->name);
     }
 }

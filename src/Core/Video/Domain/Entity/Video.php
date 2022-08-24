@@ -4,7 +4,6 @@ namespace Core\Video\Domain\Entity;
 
 use Core\Seedwork\Domain\Entity\Entity;
 use Core\Seedwork\Domain\Entity\Traits\ValidationTrait;
-use Core\Seedwork\Domain\Validation\ValidatorFactory;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Video\Domain\Enum\Rating;
 use Core\Video\Domain\ValueObject\Image;

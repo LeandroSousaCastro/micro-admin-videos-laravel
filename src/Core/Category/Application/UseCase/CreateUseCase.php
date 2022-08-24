@@ -28,7 +28,7 @@ class CreateUseCase
         return new CreateOutputDto(
             id: $newCategory->id,
             name: $newCategory->name,
-            description: $newCategory->description,
+            description: $newCategory->description ?? null,
             is_active: $newCategory->isActive,
             created_at: $newCategory->createdAt()
         );

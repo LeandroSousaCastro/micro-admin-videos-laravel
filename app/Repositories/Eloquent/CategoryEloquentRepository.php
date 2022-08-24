@@ -21,7 +21,7 @@ class CategoryEloquentRepository implements CategoryCategoryRepositoryInterface
         $category = $this->model->create([
             'id' => $category->id(),
             'name' => $category->name,
-            'description' => $category->description,
+            'description' => $category->description ?? null,
             'is_active' => $category->isActive,
             'created_at' => $category->createdAt()
         ]);

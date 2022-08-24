@@ -43,7 +43,10 @@ class UpdateUseCaseUnitTest extends TestCase
     private function mockEntity(string $uuid)
     {
         $mockEntity = Mockery::mock(Genre::class, [
-            'teste', new ValueObjectUuid($uuid), [], true
+            'teste',
+            [],
+            true,
+            new ValueObjectUuid($uuid),
         ]);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
         $mockEntity->shouldReceive('update')->times(1);

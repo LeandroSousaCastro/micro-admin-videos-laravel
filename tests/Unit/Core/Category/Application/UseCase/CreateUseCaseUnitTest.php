@@ -22,7 +22,6 @@ class CreateUseCaseUnitTest extends TestCase
         $name = 'name';
 
         $mockEntity = Mockery::mock(Category::class, [
-            $uuid,
             $name
         ]);
         $mockEntity->shouldReceive('id')->andReturn($uuid);
@@ -39,7 +38,6 @@ class CreateUseCaseUnitTest extends TestCase
 
         $this->assertInstanceOf(CreateUseCase::class, $useCase);
         $this->assertInstanceOf(CreateOutputDto::class, $responseUseCase);
-        $this->assertEquals($uuid, $responseUseCase->id);
         $this->assertEquals($name, $responseUseCase->name);
         $this->assertEquals('', $responseUseCase->description);
         $this->assertTrue($responseUseCase->is_active);
