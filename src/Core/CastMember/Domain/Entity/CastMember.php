@@ -4,20 +4,25 @@ namespace Core\CastMember\Domain\Entity;
 
 use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\Seedwork\Domain\Entity\Entity;
-use Core\Seedwork\Domain\Validation\DomainValidation;
+use Core\Seedwork\Domain\Entity\Traits\ValidationTrait;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use DateTime;
 
 class CastMember extends Entity
 {
+    use ValidationTrait;
+
+    protected $rules = [
+        'name' => 'required|min:3|max:255',
+    ];
+
     public function __construct(
         protected string $name,
-        protected ?CastMemberType $type = null,
+        protected CastMemberType $type,
         protected Uuid|string $id = '',
         protected DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
-        $this->type = is_int($type) ? CastMemberType::from($type) : $type;
         $this->validate();
     }
 
@@ -30,13 +35,5 @@ class CastMember extends Entity
             $this->type = $type;
         }
         $this->validate();
-    }
-
-    private function validate()
-    {
-        DomainValidation::notNull($this->name);
-        DomainValidation::strMaxLength($this->name);
-        DomainValidation::strMinLength($this->name);
-        DomainValidation::notNull($this->type);
     }
 }

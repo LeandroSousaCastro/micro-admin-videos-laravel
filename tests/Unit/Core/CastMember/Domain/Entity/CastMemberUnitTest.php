@@ -8,6 +8,7 @@ use Core\CastMember\Domain\Entity\CastMember;
 use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Seedwork\Domain\Exception\EntityValidationException;
+use Core\Seedwork\Domain\Exception\NotificationException;
 use PHPUnit\Framework\TestCase;
 
 class CastMemberUnitTest extends TestCase
@@ -42,8 +43,7 @@ class CastMemberUnitTest extends TestCase
 
     public function testAttributesCreateWithEmptyType()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Should not be empty or null');
+        $this->expectException(ArgumentCountError::class);
         (new CastMember(name: 'Name'));
     }
 
@@ -55,16 +55,16 @@ class CastMemberUnitTest extends TestCase
 
     public function testEntityExceptionMinLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be least than 2 characters');
-        (new CastMember(name: 'A'));
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('CastMember: The Name minimum is 3,');
+        (new CastMember(name: 'A', type: CastMemberType::DIRECTOR));
     }
 
     public function testEntityExceptionMaxLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be greater than 255 characters');
-        (new CastMember(name: str_repeat('a', 256)));
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('CastMember: The Name maximum is 255,');
+        (new CastMember(name: str_repeat('a', 256), type: CastMemberType::ACTOR));
     }
 
     public function testUpdate()
@@ -88,8 +88,8 @@ class CastMemberUnitTest extends TestCase
 
     public function testEntityExceptionUpdateMinLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be least than 2 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('CastMember: The Name minimum is 3,');
         $castMember = new CastMember(
             name: 'Name',
             type: CastMemberType::DIRECTOR
@@ -101,8 +101,8 @@ class CastMemberUnitTest extends TestCase
 
     public function testEntityExceptionUpdateMaxLength()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('The value must not be greater than 255 characters');
+        $this->expectException(NotificationException::class);
+        $this->expectExceptionMessage('CastMember: The Name maximum is 255,');
         $castMember = new CastMember(
             name: 'Name',
             type: CastMemberType::DIRECTOR

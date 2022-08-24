@@ -14,19 +14,22 @@ class RakitValidator implements ValidatorInterface
     ) {
     }
 
-    public function validate(array $data, string $context, array $rules): void
+    public function validate(array $dataValidation): void
     {
-        $validation = $this->validator->validate($data, $rules);
+        $validation = $this->validator->validate(
+            $dataValidation['data'],
+            $dataValidation['rules']
+        );
 
         if ($validation->fails()) {
             foreach ($validation->errors()->all() as $error) {
                 $this->notification->addError([
-                    'context' => $context,
+                    'context' => $dataValidation['context'],
                     'message' => $error
                 ]);
             }
             throw new NotificationException(
-                $this->notification->messages($context)
+                $this->notification->messages($dataValidation['context'])
             );
         }
     }

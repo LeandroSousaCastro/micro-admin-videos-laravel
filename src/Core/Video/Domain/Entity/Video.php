@@ -3,6 +3,7 @@
 namespace Core\Video\Domain\Entity;
 
 use Core\Seedwork\Domain\Entity\Entity;
+use Core\Seedwork\Domain\Entity\Traits\ValidationTrait;
 use Core\Seedwork\Domain\Validation\ValidatorFactory;
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Video\Domain\Enum\Rating;
@@ -11,9 +12,17 @@ use Core\Video\Domain\ValueObject\Media;
 
 class Video extends Entity
 {
+    use ValidationTrait;
+
     protected array $categoriesId = [];
     protected array $genresId = [];
     protected array $castMembersId = [];
+    protected array $rules = [
+        'title' => 'required|min:3|max:255',
+        'description' => 'required|min:3|max:255',
+        'yearLaunched' => 'required|integer',
+        'duration' => 'required|integer',
+    ];
 
     public function __construct(
         protected Uuid|string $id = '',
@@ -32,7 +41,7 @@ class Video extends Entity
         protected \DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
-        $this->validation();
+        $this->validate();
     }
 
     public function addCategoryId(array|string $categoryId)
@@ -88,20 +97,5 @@ class Video extends Entity
     public function videoFile(): ?Media
     {
         return $this->videoFile;
-    }
-
-    protected function validation()
-    {
-        $rules = [
-            'title' => 'required|min:3|max:255',
-            'description' => 'required|min:3|max:255',
-            'yearLaunched' => 'required|integer',
-            'duration' => 'required|integer',
-        ];
-        ValidatorFactory::create()->validate(
-            $this->toArray(),
-            'video',
-            $rules
-        );
     }
 }

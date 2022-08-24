@@ -28,7 +28,7 @@ abstract class Entity
         return $this->createdAt->format('Y-m-d H:i:s');
     }
 
-    public function toArray()
+    protected function toArray()
     {
         return (new ReflectionHydrator)->extract($this);
     }
