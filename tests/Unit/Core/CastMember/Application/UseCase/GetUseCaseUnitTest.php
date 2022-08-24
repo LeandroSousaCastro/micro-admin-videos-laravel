@@ -22,7 +22,7 @@ class GetUseCaseUnitTest extends TestCase
         $uuid = RamseyUuid::uuid4()->toString();
         $name = 'name';
         $type = CastMemberType::DIRECTOR;
-        $mockEntity = Mockery::mock(CastMember::class, [$uuid, $name, $type]);
+        $mockEntity = Mockery::mock(CastMember::class, [$name, $type, $uuid]);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
 
         $mockRepository = Mockery::mock(stdClass::class, CastMemberRepositoryInterface::class);

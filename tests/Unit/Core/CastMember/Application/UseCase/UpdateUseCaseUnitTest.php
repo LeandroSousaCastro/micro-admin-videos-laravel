@@ -23,7 +23,7 @@ class UpdateUseCaseUnitTest extends TestCase
         $name = 'Name';
 
         $mockEntity = Mockery::mock(CastMember::class, [
-            $uuid, $name, CastMemberType::DIRECTOR
+            $name, CastMemberType::DIRECTOR, $uuid
         ]);
         $mockEntity->shouldReceive('createdAt')->andReturn(date('Y-m-d H:i:s'));
         $mockEntity->shouldReceive('update')->once();

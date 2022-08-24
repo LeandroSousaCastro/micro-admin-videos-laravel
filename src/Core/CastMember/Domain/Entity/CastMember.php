@@ -11,9 +11,9 @@ use DateTime;
 class CastMember extends Entity
 {
     public function __construct(
+        protected string $name,
+        protected ?CastMemberType $type = null,
         protected Uuid|string $id = '',
-        protected string $name = '',
-        protected CastMemberType|int|null $type = null,
         protected DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
@@ -23,7 +23,7 @@ class CastMember extends Entity
 
     public function update(
         string $name,
-        CastMemberType|int|null $type = null
+        ?CastMemberType $type = null
     ): void {
         $this->name = $name;
         if ($type) {

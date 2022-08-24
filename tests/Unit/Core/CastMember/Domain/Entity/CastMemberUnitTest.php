@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Core\CastMember\Domain\Entity;
 
+use ArgumentCountError;
 use Ramsey\Uuid\Uuid as RamseyUuid;
 use Core\CastMember\Domain\Entity\CastMember;
 use Core\CastMember\Domain\Enum\CastMemberType;
@@ -46,10 +47,9 @@ class CastMemberUnitTest extends TestCase
         (new CastMember(name: 'Name'));
     }
 
-    public function testEntityExceptionMotNull()
+    public function testEntityExceptionNotNull()
     {
-        $this->expectException(EntityValidationException::class);
-        $this->expectExceptionMessage('Should not be empty or null');
+        $this->expectException(ArgumentCountError::class);
         (new CastMember());
     }
 
