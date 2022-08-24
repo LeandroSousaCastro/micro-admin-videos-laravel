@@ -37,6 +37,11 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
         return $this->toCastMember($castMember);
     }
 
+    public function getIdsListIds(array $castMembersId = []): array
+    {
+        return $this->model->whereIn('id', $castMembersId)->pluck('id')->toArray();
+    }
+
     public function findAll(string $filter = '', $order = 'DESC'): array
     {
         $castMembers = $this->model

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Domain\Notification;
+namespace Tests\Unit\Core\Seedwork\Domain\Notification;
 
 use Core\Seedwork\Domain\Notification\Notification;
 use PHPUnit\Framework\TestCase;

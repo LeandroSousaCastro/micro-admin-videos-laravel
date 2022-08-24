@@ -24,19 +24,19 @@ class Video extends Entity
     ];
 
     public function __construct(
-        protected Uuid|string $id = '',
-        protected ?string $title = null,
-        protected ?string $description = null,
-        protected ?int $yearLaunched = null,
-        protected ?int $duration = null,
-        protected ?bool $opened = null,
-        protected ?Rating $rating = null,
+        protected string $title,
+        protected string $description,
+        protected int $yearLaunched,
+        protected int $duration,
+        protected bool $opened,
+        protected Rating $rating,
         protected ?Image $thumbFile = null,
         protected ?Image $thumbHalf = null,
         protected ?Image $bannerFile = null,
         protected ?Media $trailerFile = null,
         protected ?Media $videoFile = null,
         protected bool $publish = false,
+        protected Uuid|string $id = '',
         protected \DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);

@@ -8,5 +8,6 @@
         "Tests",
         "Controllers",
         "Repository"
-    ]
+    ],
+    "intelephense.diagnostics.typeErrors": false
 }
