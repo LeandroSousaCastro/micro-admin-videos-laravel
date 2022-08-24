@@ -16,6 +16,10 @@ class CreateInputDto
         public array $categories,
         public array $genres,
         public array $castMembers,
+        public ?array $thumbFile = null,
+        public ?array $thumbHalf = null,
+        public ?array $bannerFile = null,
+        public ?array $trailerFile = null,
         public ?array $videoFile = null,
     ) {
     }

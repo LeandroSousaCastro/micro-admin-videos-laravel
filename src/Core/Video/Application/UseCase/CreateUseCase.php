@@ -19,6 +19,7 @@ use Core\Video\Domain\Entity\Video as EntityVideo;
 use Core\Video\Domain\Events\VideoCreated;
 use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
+use Dotenv\Parser\Entry;
 use Throwable;
 
 class CreateUseCase
@@ -55,7 +56,7 @@ class CreateUseCase
             throw $th;
         }
 
-        return new CreateOutputDto();
+        return $this->output($entity);
     }
 
     private function createEntity(CreateInputDto $input): Entity
@@ -142,5 +143,26 @@ class CreateUseCase
 
             throw new NotFoundException($msg);
         }
+    }
+
+    private function output(EntityVideo $entity): CreateOutputDto
+    {
+        return new CreateOutputDto(
+            id: $entity->id(),
+            title: $entity->title,
+            description: $entity->description,
+            yearLaunched: $entity->yearLaunched,
+            duration: $entity->duration,
+            opened: $entity->opened,
+            rating: $entity->rating,
+            categories: $entity->categoriesId,
+            genres: $entity->genresId,
+            castMembers: $entity->castMembersId,
+            thumbFile: $entity->thumbFile()?->filePath,
+            thumbHalf: $entity->thumbHalf()?->filePath,
+            bannerFile: $entity->bannerFile()?->filePath,
+            trailerFile: $entity->trailerFile()?->filePath,
+            videoFile: $entity->videoFile()?->filePath,
+        );
     }
 }
