@@ -4,7 +4,8 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Category as CategoryModel;
 use App\Repositories\Presenters\PaginationPresenter;
-use Core\Category\Domain\Entity\Category as EntityCategory;
+use Core\Category\Domain\Entity\Category;
+use Core\Seedwork\Domain\Entity\Entity;
 use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
@@ -16,7 +17,7 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
     {
     }
 
-    public function insert(EntityCategory $category): EntityCategory
+    public function insert(Entity $category): Entity
     {
         $category = $this->model->create([
             'id' => $category->id(),
@@ -28,7 +29,7 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
         return $this->toCategory($category);
     }
 
-    public function findById(string $id): EntityCategory
+    public function findById(string $id): Entity
     {
         if (!$category = $this->model->find($id)) {
             throw new NotFoundException("Category not found for id: {$id}");
@@ -67,16 +68,16 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
         return new PaginationPresenter($paginator);
     }
 
-    public function update(EntityCategory $EntityCategory): EntityCategory
+    public function update(Entity $entityCategory): Entity
     {
-        if (!$category = $this->model->find($EntityCategory->id())) {
-            throw new NotFoundException("Category not found for id: {$EntityCategory->id()}");
+        if (!$category = $this->model->find($entityCategory->id())) {
+            throw new NotFoundException("Category not found for id: {$entityCategory->id()}");
         }
 
         $category->update([
-            'name' => $EntityCategory->name,
-            'description' => $EntityCategory->description,
-            'is_active' => $EntityCategory->isActive
+            'name' => $entityCategory->name,
+            'description' => $entityCategory->description,
+            'is_active' => $entityCategory->isActive
         ]);
 
         $category->refresh();
@@ -95,9 +96,9 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
         return $result;
     }
 
-    private function toCategory(object $data): EntityCategory
+    private function toCategory(object $data): Entity
     {
-        $entity =  new EntityCategory(
+        $entity =  new Category(
             id: $data->id,
             name: $data->name,
             description: $data->description,

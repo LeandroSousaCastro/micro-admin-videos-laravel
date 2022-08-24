@@ -4,7 +4,8 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\CastMember as ModelCastMember;
 use App\Repositories\Presenters\PaginationPresenter;
-use Core\CastMember\Domain\Entity\CastMember as EntityCastMember;
+use Core\CastMember\Domain\Entity\CastMember;
+use Core\Seedwork\Domain\Entity\Entity;
 use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
@@ -17,7 +18,7 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
     {
     }
 
-    public function insert(EntityCastMember $castMember): EntityCastMember
+    public function insert(Entity $castMember): Entity
     {
         $castMember = $this->model->create([
             'id' => $castMember->id(),
@@ -28,7 +29,7 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
         return $this->toCastMember($castMember);
     }
 
-    public function findById(string $id): EntityCastMember
+    public function findById(string $id): Entity
     {
         if (!$castMember = $this->model->find($id)) {
             throw new NotFoundException("CastMember not found for id: {$id}");
@@ -67,15 +68,15 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
         return new PaginationPresenter($paginator);
     }
 
-    public function update(EntityCastMember $EntityCastMember): EntityCastMember
+    public function update(Entity $entityCastMember): Entity
     {
-        if (!$castMember = $this->model->find($EntityCastMember->id())) {
-            throw new NotFoundException("CastMember not found for id: {$EntityCastMember->id()}");
+        if (!$castMember = $this->model->find($entityCastMember->id())) {
+            throw new NotFoundException("CastMember not found for id: {$entityCastMember->id()}");
         }
 
         $castMember->update([
-            'name' => $EntityCastMember->name,
-            'type' => $EntityCastMember->type->value,
+            'name' => $entityCastMember->name,
+            'type' => $entityCastMember->type->value,
         ]);
 
         $castMember->refresh();
@@ -94,9 +95,9 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
         return $result;
     }
 
-    private function toCastMember(object $object): EntityCastMember
+    private function toCastMember(object $object): Entity
     {
-        return new EntityCastMember(
+        return new CastMember(
             id: $object->id,
             name: $object->name,
             type: CastMemberType::from($object->type),

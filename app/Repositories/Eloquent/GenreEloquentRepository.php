@@ -4,7 +4,8 @@ namespace App\Repositories\Eloquent;
 
 use App\Models\Genre as ModelGenre;
 use App\Repositories\Presenters\PaginationPresenter;
-use Core\Genre\Domain\Entity\Genre as EntityGenre;
+use Core\Genre\Domain\Entity\Genre;
+use Core\Seedwork\Domain\Entity\Entity;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
@@ -16,7 +17,7 @@ class GenreEloquentRepository implements GenreRepositoryInterface
     {
     }
 
-    public function insert(EntityGenre $entity): EntityGenre
+    public function insert(Entity $entity): Entity
     {
         $genre = $this->model->create([
             'id' => $entity->id(),
@@ -32,7 +33,7 @@ class GenreEloquentRepository implements GenreRepositoryInterface
         return $this->toGenre($genre);
     }
 
-    public function findById(string $id): EntityGenre
+    public function findById(string $id): Entity
     {
         if (!$genre = $this->model->find($id)) {
             throw new NotFoundException("Genre not found for id: {$id}");
@@ -71,7 +72,7 @@ class GenreEloquentRepository implements GenreRepositoryInterface
         return new PaginationPresenter($paginator);
     }
 
-    public function update(EntityGenre $entityGenre): EntityGenre
+    public function update(Entity $entityGenre): Entity
     {
         if (!$genre = $this->model->find($entityGenre->id())) {
             throw new NotFoundException("Genre not found for id: {$entityGenre->id()}");
@@ -102,9 +103,9 @@ class GenreEloquentRepository implements GenreRepositoryInterface
         return $result;
     }
 
-    private function toGenre(object $object): EntityGenre
+    private function toGenre(object $object): Entity
     {
-        $entity =  new EntityGenre(
+        $entity =  new Genre(
             id: $object->id,
             name: $object->name,
             createdAt: $object->created_at,
