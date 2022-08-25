@@ -82,7 +82,7 @@ abstract class BaseUseCase
         $arrayDiff = array_diff($ids, $idsDb);
         if (count($arrayDiff)) {
             $msg = sprintf(
-                '%s %x not found',
+                '%s %s not found',
                 count($arrayDiff) > 1 ? $pluralLabel ?? $singularLabel . 's'  : $singularLabel,
                 implode(', ', $arrayDiff)
             );

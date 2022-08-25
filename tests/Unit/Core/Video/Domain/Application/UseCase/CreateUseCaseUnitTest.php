@@ -14,6 +14,7 @@ use Core\Seedwork\Application\Interfaces\{
     FileStorageInterface,
     DbTransactionInterface
 };
+use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Application\UseCase\CreateUseCase;
 use Core\Video\Domain\Entity\Video as EntityVideo;
@@ -47,6 +48,50 @@ class CreateUseCaseUnitTest extends TestCase
             input: $this->createMockInputDto()
         );
         $this->assertInstanceOf(CreateOutputDto::class, $response);
+    }
+
+    public function testValidateCategoriesIdsSingularMessage()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage('Category uuid-1 not found');
+        $this->useCase->execute(
+            input: $this->createMockInputDto(
+                categoriesIds: ['uuid-1']
+            )
+        );
+    }
+
+    public function testValidateCategoriesIdsPluralarMessage()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage('Categories uuid-1, uuid-2 not found');
+        $this->useCase->execute(
+            input: $this->createMockInputDto(
+                categoriesIds: ['uuid-1', 'uuid-2']
+            )
+        );
+    }
+
+    public function testValidateGenresIdsSingularMessage()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage('Genre uuid-1 not found');
+        $this->useCase->execute(
+            input: $this->createMockInputDto(
+                genresIds: ['uuid-1']
+            )
+        );
+    }
+
+    public function testValidateGenresIdsPluralarMessage()
+    {
+        $this->expectException(NotFoundException::class);
+        $this->expectErrorMessage('Genres uuid-1, uuid-2 not found');
+        $this->useCase->execute(
+            input: $this->createMockInputDto(
+                genresIds: ['uuid-1', 'uuid-2']
+            )
+        );
     }
 
     private function createMockRepository()
@@ -100,8 +145,11 @@ class CreateUseCaseUnitTest extends TestCase
         return $mockEventManager;
     }
 
-    private function createMockInputDto()
-    {
+    private function createMockInputDto(
+        array $categoriesIds = [],
+        array $genresIds = [],
+        array $castMembersIds = []
+    ) {
         return Mockery::mock(CreateInputDto::class, [
             'title',
             'description',
@@ -109,9 +157,9 @@ class CreateUseCaseUnitTest extends TestCase
             120,
             true,
             Rating::RATE18,
-            [],
-            [],
-            []
+            $categoriesIds,
+            $genresIds,
+            $castMembersIds
         ]);
     }
 
