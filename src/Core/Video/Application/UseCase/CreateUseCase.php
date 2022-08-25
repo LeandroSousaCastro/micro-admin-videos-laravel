@@ -22,7 +22,6 @@ use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
 use Core\Video\Domain\ValueObject\Image;
 use Core\Video\Domain\ValueObject\Media;
-use Dotenv\Parser\Entry;
 use Throwable;
 
 class CreateUseCase
@@ -33,7 +32,7 @@ class CreateUseCase
         protected VideoRepositoryInterface $repository,
         protected CategoryRepositoryInterface $categoryRepository,
         protected GenreRepositoryInterface $genreRepository,
-        protected CastMemberRepositoryInterface $castMembersResponse,
+        protected CastMemberRepositoryInterface $castMembersRepository,
         protected DbTransactionInterface $transaction,
         protected FileStorageInterface $storage,
         protected VideoEventManagerInterface $eventManager
@@ -42,6 +41,7 @@ class CreateUseCase
 
     public function execute(CreateInputDto $input): CreateOutputDto
     {
+        $this->validateAllIds($input);
         $this->entity = $this->createEntity($input);
 
         try {
@@ -68,17 +68,14 @@ class CreateUseCase
             rating: $input->rating
         );
 
-        $this->validateCategoriesId($input->categories);
         foreach ($input->categories as $categoryId) {
             $this->entity->addCategoryId($categoryId);
         }
 
-        $this->validateGenresId($input->genres);
         foreach ($input->genres as $genreId) {
             $this->entity->addGenreId($genreId);
         }
 
-        $this->validateCastMembersId($input->castMembers);
         foreach ($input->castMembers as $castMemberId) {
             $this->entity->addCastMemberId($castMemberId);
         }
@@ -134,47 +131,23 @@ class CreateUseCase
         return null;
     }
 
-    private function validateCategoriesId(array $categoriesId = []): void
+    protected function validateAllIds(object $input)
     {
-        $categories = $this->categoryRepository->getIdsListIds($categoriesId);
-        $arrayDiff = array_diff($categoriesId, $categories);
-        if (count($arrayDiff)) {
-            $msg = sprintf(
-                '%s %s not found',
-                count($arrayDiff) > 1 ? 'Categories' : 'Category',
-                implode(', ', $arrayDiff)
-            );
-
-            throw new NotFoundException($msg);
-        }
+        $this->validateIds($input->categories, $this->categoryRepository, "Category", "Categories");
+        $this->validateIds($input->genres, $this->genreRepository, "Genre");
+        $this->validateIds($input->castMembers, $this->castMembersRepository, "CastMembers");
     }
 
-    private function validateGenresId(array $genresId = []): void
+    protected function validateIds(array $ids, $repository, string $singularLabel, ?string $pluralLabel = null): void
     {
-        $genres = $this->categoryRepository->getIdsListIds($genresId);
-        $arrayDiff = array_diff($genresId, $genres);
+        $idsDb = $repository->getIdsListIds($ids);
+        $arrayDiff = array_diff($ids, $idsDb);
         if (count($arrayDiff)) {
             $msg = sprintf(
-                '%s %s not found',
-                count($arrayDiff) > 1 ? 'Genres' : 'Genre',
+                '%s %x not found',
+                count($arrayDiff) > 1 ? $pluralLabel ?? $singularLabel . 's'  : $singularLabel,
                 implode(', ', $arrayDiff)
             );
-
-            throw new NotFoundException($msg);
-        }
-    }
-
-    private function validateCastMembersId(array $castMembersId = []): void
-    {
-        $castMembers = $this->categoryRepository->getIdsListIds($castMembersId);
-        $arrayDiff = array_diff($castMembersId, $castMembers);
-        if (count($arrayDiff)) {
-            $msg = sprintf(
-                '%s %s not found',
-                count($arrayDiff) > 1 ? 'CastMembers' : 'CastMember',
-                implode(', ', $arrayDiff)
-            );
-
             throw new NotFoundException($msg);
         }
     }

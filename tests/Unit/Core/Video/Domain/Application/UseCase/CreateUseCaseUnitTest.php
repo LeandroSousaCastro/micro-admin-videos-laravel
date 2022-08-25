@@ -32,7 +32,7 @@ class CreateUseCaseUnitTest extends TestCase
             repository: $this->createMockRepository(),
             categoryRepository: $this->createMockRepositoryCategory(),
             genreRepository: $this->createMockRepositoryGenre(),
-            castMembersResponse: $this->createMockRepositoryCastMembers(),
+            castMembersRepository: $this->createMockRepositoryCastMembers(),
             transaction: $this->createMockTransaction(),
             storage: $this->createMockFileStorage(),
             eventManager: $this->createMockEventManager(),
