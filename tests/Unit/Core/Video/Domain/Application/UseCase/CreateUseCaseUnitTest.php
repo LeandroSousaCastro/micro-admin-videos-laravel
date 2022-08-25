@@ -53,6 +53,7 @@ class CreateUseCaseUnitTest extends TestCase
     {
         $mockRepository = Mockery::mock(stdClass::class, VideoRepositoryInterface::class);
         $mockRepository->shouldReceive('insert')->andReturn($this->createMockEntity());
+        $mockRepository->shouldReceive('updateMedia');
         return $mockRepository;
     }
 

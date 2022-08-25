@@ -16,14 +16,19 @@ use Core\Video\Application\Dto\{
     CreateOutputDto
 };
 use Core\Video\Domain\Entity\Video as EntityVideo;
+use Core\Video\Domain\Enum\MediaStatus;
 use Core\Video\Domain\Events\VideoCreated;
 use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
+use Core\Video\Domain\ValueObject\Image;
+use Core\Video\Domain\ValueObject\Media;
 use Dotenv\Parser\Entry;
 use Throwable;
 
 class CreateUseCase
 {
+    protected EntityVideo $entity;
+
     public function __construct(
         protected VideoRepositoryInterface $repository,
         protected CategoryRepositoryInterface $categoryRepository,
@@ -37,31 +42,24 @@ class CreateUseCase
 
     public function execute(CreateInputDto $input): CreateOutputDto
     {
-        $entity = $this->createEntity($input);
+        $this->entity = $this->createEntity($input);
 
         try {
-            $this->repository->insert($entity);
-            $pathMedia = $this->storeMedia(
-                $entity->id,
-                $input->videoFile
-            );
-            if ($pathMedia) {
-                $this->eventManager->dispatch(
-                    new VideoCreated($entity)
-                );
-            }
+            $this->repository->insert($this->entity);
+            $this->storageFiles($input);
+            $this->repository->updateMedia($this->entity);
             $this->transaction->commit();
         } catch (Throwable $th) {
             $this->transaction->rollBack();
             throw $th;
         }
 
-        return $this->output($entity);
+        return $this->output($this->entity);
     }
 
     private function createEntity(CreateInputDto $input): Entity
     {
-        $entity = new EntityVideo(
+        $this->entity = new EntityVideo(
             title: $input->title,
             description: $input->description,
             yearLaunched: $input->yearLaunched,
@@ -72,23 +70,59 @@ class CreateUseCase
 
         $this->validateCategoriesId($input->categories);
         foreach ($input->categories as $categoryId) {
-            $entity->addCategoryId($categoryId);
+            $this->entity->addCategoryId($categoryId);
         }
 
         $this->validateGenresId($input->genres);
         foreach ($input->genres as $genreId) {
-            $entity->addGenreId($genreId);
+            $this->entity->addGenreId($genreId);
         }
 
         $this->validateCastMembersId($input->castMembers);
         foreach ($input->castMembers as $castMemberId) {
-            $entity->addCastMemberId($castMemberId);
+            $this->entity->addCastMemberId($castMemberId);
         }
 
-        return $entity;
+        return $this->entity;
     }
 
-    private function storeMedia(string $path, ?array $media = null): ?string
+    protected function storageFiles(object $input): void
+    {
+        if ($pathVideoFile = $this->storageFile($this->entity->id, $input->videoFile)) {
+            $this->entity->setVideoFile(new Media(
+                filePath: $pathVideoFile,
+                mediaStatus: MediaStatus::PROCESSING
+            ));
+            $this->eventManager->dispatch(new VideoCreated($this->entity));
+        }
+
+        if ($pathTrailerFile = $this->storageFile($this->entity->id, $input->trailerFile)) {
+            $this->entity->setTrailerFile(new Media(
+                filePath: $pathTrailerFile,
+                mediaStatus: MediaStatus::PROCESSING
+            ));
+        }
+
+        if ($pathThumbFile = $this->storageFile($this->entity->id, $input->thumbFile)) {
+            $this->entity->setThumbFile(new Image(
+                path: $pathThumbFile,
+            ));
+        }
+
+        if ($pathThumbHalf = $this->storageFile($this->entity->id, $input->thumbHalf)) {
+            $this->entity->setThumbHalf(new Image(
+                path: $pathThumbHalf,
+            ));
+        }
+
+        if ($pathBannerFile = $this->storageFile($this->entity->id, $input->bannerFile)) {
+            $this->entity->setBannerFile(new Image(
+                path: $pathBannerFile,
+            ));
+        }
+    }
+
+    private function storageFile(string $path, ?array $media = null): ?string
     {
         if ($media) {
             return $this->storage->store(
