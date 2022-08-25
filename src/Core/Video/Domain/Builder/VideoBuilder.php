@@ -23,7 +23,7 @@ class VideoBuilder implements BuilderInterface
     }
 
 
-    public function createEntity(object $input): void
+    public function createEntity(object $input): BuilderInterface
     {
         $this->entity = new Video(
             title: $input->title,
@@ -45,43 +45,55 @@ class VideoBuilder implements BuilderInterface
         foreach ($input->castMembers as $castMemberId) {
             $this->entity->addCastMemberId($castMemberId);
         }
+
+        return $this;
     }
 
-    public function addMediaVideo(string $path, MediaStatus $mediaStatus): void
+    public function addMediaVideo(string $path, MediaStatus $mediaStatus): BuilderInterface
     {
         $this->entity->setVideoFile(new Media(
             filePath: $path,
             mediaStatus: $mediaStatus
         ));
+
+        return $this;
     }
 
-    public function addTrailer(string $path): void
+    public function addTrailer(string $path): BuilderInterface
     {
         $this->entity->setsetTrailerFileTr(new Media(
             filePath: $path,
             mediaStatus: MediaStatus::COMPLETE
         ));
+
+        return $this;
     }
 
-    public function addThumb(string $path): void
+    public function addThumb(string $path): BuilderInterface
     {
         $this->entity->setThumbFile(new Image(
             path: $path,
         ));
+
+        return $this;
     }
 
-    public function addThumbHalf(string $path): void
+    public function addThumbHalf(string $path): BuilderInterface
     {
         $this->entity->setThumbHalf(new Image(
             path: $path,
         ));
+
+        return $this;
     }
 
-    public function addBanner(string $path): void
+    public function addBanner(string $path): BuilderInterface
     {
         $this->entity->setBannerFile(new Image(
             path: $path,
         ));
+
+        return $this;
     }
 
     public function getEntity(): Video
