@@ -17,7 +17,7 @@ class VideoBuilder implements BuilderInterface
         $this->reset();
     }
 
-    private function reset()
+    private function reset(): void
     {
         $this->entity = null;
     }
@@ -34,6 +34,13 @@ class VideoBuilder implements BuilderInterface
             rating: $input->rating
         );
 
+        $this->addIds($input);
+
+        return $this;
+    }
+
+    protected function addIds(object $input): void
+    {
         foreach ($input->categories as $categoryId) {
             $this->entity->addCategoryId($categoryId);
         }
@@ -45,8 +52,6 @@ class VideoBuilder implements BuilderInterface
         foreach ($input->castMembers as $castMemberId) {
             $this->entity->addCastMemberId($castMemberId);
         }
-
-        return $this;
     }
 
     public function addMediaVideo(string $path, MediaStatus $mediaStatus): BuilderInterface
