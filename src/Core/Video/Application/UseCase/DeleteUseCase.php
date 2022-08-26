@@ -2,15 +2,15 @@
 
 namespace Core\Video\Application\UseCase;
 
-use Core\Genre\Application\Dto\{
+use Core\Video\Application\Dto\{
     DeleteInputDto,
     DeleteOutputDto,
 };
-use Core\Genre\Domain\Repository\GenreRepositoryInterface;
+use Core\Video\Domain\Repository\VideoRepositoryInterface;
 
 class DeleteUseCase
 {
-    public function __construct(protected GenreRepositoryInterface $repository)
+    public function __construct(protected VideoRepositoryInterface $repository)
     {
     }
 
