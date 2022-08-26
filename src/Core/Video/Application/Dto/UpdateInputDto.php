@@ -2,8 +2,6 @@
 
 namespace Core\Video\Application\Dto;
 
-use Core\Video\Domain\Enum\Rating;
-
 class UpdateInputDto
 {
     public function __construct(
