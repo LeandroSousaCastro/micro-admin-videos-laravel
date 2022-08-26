@@ -10,7 +10,7 @@ use Core\Seedwork\Application\Interfaces\{
     DbTransactionInterface,
     FileStorageInterface
 };
-use Core\Video\Domain\Builder\VideoBuilder;
+use Core\Video\Domain\Builder\BuilderInterface;
 use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
 use Core\Video\Domain\Enum\MediaStatus;
@@ -18,7 +18,9 @@ use Core\Video\Domain\Events\VideoCreated;
 
 abstract class BaseUseCase
 {
-    protected VideoBuilder $builder;
+    protected BuilderInterface $builder;
+
+    abstract protected function getBuilder(): BuilderInterface;
 
     public function __construct(
         protected VideoRepositoryInterface $repository,
@@ -29,7 +31,7 @@ abstract class BaseUseCase
         protected FileStorageInterface $storage,
         protected VideoEventManagerInterface $eventManager
     ) {
-        $this->builder = new VideoBuilder();
+        $this->builder = $this->getBuilder();
     }
 
     protected function storageFiles(object $input): void

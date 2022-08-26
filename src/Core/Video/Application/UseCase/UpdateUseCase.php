@@ -3,27 +3,34 @@
 namespace Core\Video\Application\UseCase;
 
 use Core\Video\Application\Dto\{
-    CreateInputDto,
-    CreateOutputDto
+    UpdateInputDto,
+    UpdateOutputDto
 };
 use Core\Video\Domain\Builder\BuilderInterface;
-use Core\Video\Domain\Builder\VideoBuilder;
+use Core\Video\Domain\Builder\UpdateVideoBuilder;
 use Throwable;
 
-class CreateUseCase extends BaseUseCase
+class UpdateUseCase extends BaseUseCase
 {
     protected function getBuilder(): BuilderInterface
     {
-        return new VideoBuilder();
+        return new UpdateVideoBuilder();
     }
 
-    public function execute(CreateInputDto $input): CreateOutputDto
+    public function execute(UpdateInputDto $input): UpdateOutputDto
     {
         $this->validateAllIds($input);
-        $this->builder->createEntity($input);
+
+        $entity = $this->repository->findById($input->id);
+        $entity->update(
+            title: $input->title,
+            description: $input->description,
+        );
+
+        $this->builder->setEntity($entity);
 
         try {
-            $this->repository->insert($this->builder->getEntity());
+            $this->repository->update($this->builder->getEntity());
             $this->storageFiles($input);
             $this->repository->updateMedia($this->builder->getEntity());
             $this->transaction->commit();
@@ -34,10 +41,10 @@ class CreateUseCase extends BaseUseCase
         }
     }
 
-    private function output(): CreateOutputDto
+    private function output(): UpdateOutputDto
     {
         $entity = $this->builder->getEntity();
-        return new CreateOutputDto(
+        return new UpdateOutputDto(
             id: $entity->id(),
             title: $entity->title,
             description: $entity->description,

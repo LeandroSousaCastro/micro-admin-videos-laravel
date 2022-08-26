@@ -23,6 +23,7 @@ class Video extends Entity
         'duration' => 'required|integer',
     ];
 
+
     public function __construct(
         protected string $title,
         protected string $description,
@@ -40,6 +41,13 @@ class Video extends Entity
         protected \DateTime|string $createdAt = ''
     ) {
         parent::__construct($id, $createdAt);
+        $this->validate();
+    }
+
+    public function update(string $title, string $description): void
+    {
+        $this->title = $title;
+        $this->description = $description;
         $this->validate();
     }
 
