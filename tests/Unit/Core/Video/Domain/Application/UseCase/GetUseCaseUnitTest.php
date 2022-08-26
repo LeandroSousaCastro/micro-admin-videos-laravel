@@ -35,13 +35,16 @@ class GetUseCaseUnitTest extends TestCase
         parent::setUp();
     }
 
-    public function testList()
+    public function testExecute()
     {
 
         $useCase = new GetUseCase(
             repository: $this->mockRepository()
         );
-        $response = $useCase->execute($this->mockInputDTO());
+        $response = $useCase->execute(
+            input: $this->mockInputDTO()
+        );
+
         $this->assertInstanceOf(GetOutputDto::class, $response);
         $this->assertEquals($response->id, $this->entity->id);
         $this->assertEquals($response->title, $this->entity->title);
@@ -56,7 +59,6 @@ class GetUseCaseUnitTest extends TestCase
     {
         $mockRepository = Mockery::mock(stdClass::class, VideoRepositoryInterface::class);
         $mockRepository->shouldReceive('findById')->once()->andReturn($this->entity);
-        $mockRepository->shouldReceive('findAll')->andReturn([]);
         return $mockRepository;
     }
 
