@@ -66,7 +66,7 @@ class VideoBuilder implements BuilderInterface
 
     public function addTrailer(string $path): BuilderInterface
     {
-        $this->entity->setsetTrailerFileTr(new Media(
+        $this->entity->setTrailerFile(new Media(
             filePath: $path,
             mediaStatus: MediaStatus::COMPLETE
         ));

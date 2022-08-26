@@ -41,9 +41,9 @@ class CreateUseCase extends BaseUseCase
             categories: $entity->categoriesId,
             genres: $entity->genresId,
             castMembers: $entity->castMembersId,
-            thumbFile: $entity->thumbFile()?->filePath,
-            thumbHalf: $entity->thumbHalf()?->filePath,
-            bannerFile: $entity->bannerFile()?->filePath,
+            thumbFile: $entity->thumbFile()?->path(),
+            thumbHalf: $entity->thumbHalf()?->path(),
+            bannerFile: $entity->bannerFile()?->path(),
             trailerFile: $entity->trailerFile()?->filePath,
             videoFile: $entity->videoFile()?->filePath,
         );

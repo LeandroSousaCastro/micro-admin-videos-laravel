@@ -50,48 +50,51 @@ class CreateUseCaseUnitTest extends TestCase
         $this->assertInstanceOf(CreateOutputDto::class, $response);
     }
 
-    public function testValidateCategoriesIdsSingularMessage()
-    {
+    /**
+     * @dataProvider dataProviderIds
+     */
+    public function testValidateCategoriesIds(
+        string $label,
+        array $ids,
+    ) {
         $this->expectException(NotFoundException::class);
-        $this->expectErrorMessage('Category uuid-1 not found');
+        $this->expectErrorMessage(sprintf(
+            '%s %s not found',
+            $label,
+            implode(', ', $ids)
+        ));
         $this->useCase->execute(
             input: $this->createMockInputDto(
-                categoriesIds: ['uuid-1']
+                categoriesIds: $ids
             )
         );
     }
 
-    public function testValidateCategoriesIdsPluralarMessage()
+    public function dataProviderIds(): array
     {
-        $this->expectException(NotFoundException::class);
-        $this->expectErrorMessage('Categories uuid-1, uuid-2 not found');
-        $this->useCase->execute(
-            input: $this->createMockInputDto(
-                categoriesIds: ['uuid-1', 'uuid-2']
-            )
-        );
+        return [
+            ['Category', ['uuid-1']],
+            ['Categories', ['uuid-1', 'uuid-2']],
+            ['Categories', ['uuid-1', 'uuid-2', 'uuid-3', 'uuid-4']],
+        ];
     }
 
-    public function testValidateGenresIdsSingularMessage()
+    public function testUploadFiles()
     {
-        $this->expectException(NotFoundException::class);
-        $this->expectErrorMessage('Genre uuid-1 not found');
-        $this->useCase->execute(
+        $response = $this->useCase->execute(
             input: $this->createMockInputDto(
-                genresIds: ['uuid-1']
+                thumbFile: ['tmp' => 'tmp/thumbFile.png'],
+                thumbHalf: ['tmp' => 'tmp/thumbHalf.png'],
+                bannerFile: ['tmp' => 'tmp/bannerFile.png'],
+                trailerFile: ['tmp' => 'tmp/trailerFile.mp4'],
+                videoFile: ['tmp' => 'tmp/videoFile.mp4']
             )
         );
-    }
-
-    public function testValidateGenresIdsPluralarMessage()
-    {
-        $this->expectException(NotFoundException::class);
-        $this->expectErrorMessage('Genres uuid-1, uuid-2 not found');
-        $this->useCase->execute(
-            input: $this->createMockInputDto(
-                genresIds: ['uuid-1', 'uuid-2']
-            )
-        );
+        $this->assertNotNull($response->thumbFile);
+        $this->assertNotNull($response->thumbHalf);
+        $this->assertNotNull($response->bannerFile);
+        $this->assertNotNull($response->trailerFile);
+        $this->assertNotNull($response->videoFile);
     }
 
     private function createMockRepository()
@@ -148,7 +151,12 @@ class CreateUseCaseUnitTest extends TestCase
     private function createMockInputDto(
         array $categoriesIds = [],
         array $genresIds = [],
-        array $castMembersIds = []
+        array $castMembersIds = [],
+        ?array $thumbFile = null,
+        ?array $thumbHalf = null,
+        ?array $bannerFile = null,
+        ?array $trailerFile = null,
+        ?array $videoFile = null,
     ) {
         return Mockery::mock(CreateInputDto::class, [
             'title',
@@ -159,7 +167,12 @@ class CreateUseCaseUnitTest extends TestCase
             Rating::RATE18,
             $categoriesIds,
             $genresIds,
-            $castMembersIds
+            $castMembersIds,
+            $thumbFile,
+            $thumbHalf,
+            $bannerFile,
+            $trailerFile,
+            $videoFile,
         ]);
     }
 
