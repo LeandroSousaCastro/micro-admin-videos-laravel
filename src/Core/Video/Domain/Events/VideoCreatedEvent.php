@@ -5,7 +5,7 @@ namespace Core\Video\Domain\Events;
 use Core\Seedwork\Domain\Events\EventInterface;
 use Core\Video\Domain\Entity\Video;
 
-class VideoCreated implements EventInterface
+class VideoCreatedEvent implements EventInterface
 {
     public function __construct(protected Video $video)
     {
@@ -20,7 +20,7 @@ class VideoCreated implements EventInterface
     {
         return [
             'resource_id' => $this->video->di,
-            'file_path' => $this->video->videoFile()->path
+            'file_path' => $this->video->videoFile()->filePath
         ];
     }
 }

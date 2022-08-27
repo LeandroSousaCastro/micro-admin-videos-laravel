@@ -14,7 +14,7 @@ use Core\Video\Domain\Builder\BuilderInterface;
 use Core\Video\Domain\Events\VideoEventManagerInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
 use Core\Video\Domain\Enum\MediaStatus;
-use Core\Video\Domain\Events\VideoCreated;
+use Core\Video\Domain\Events\VideoCreatedEvent;
 
 abstract class BaseUseCase
 {
@@ -40,7 +40,7 @@ abstract class BaseUseCase
         $path = $entity->id;
         if ($pathVideoFile = $this->storageFile($path, $input->videoFile)) {
             $this->builder->addMediaVideo($pathVideoFile, MediaStatus::PROCESSING);
-            $this->eventManager->dispatch(new VideoCreated($entity));
+            $this->eventManager->dispatch(new VideoCreatedEvent($entity));
         }
 
         if ($pathTrailerFile = $this->storageFile($path, $input->trailerFile)) {

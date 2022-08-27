@@ -10,5 +10,5 @@ interface FileStorageInterface
      * @return string
      */
     public function store(string $path, array $file): string;
-    public function rollback();
+    public function delete(string $path);
 }
