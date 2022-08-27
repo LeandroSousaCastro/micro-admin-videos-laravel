@@ -12,7 +12,7 @@ class Media
     public function __construct(
         protected string $filePath,
         protected MediaStatus $mediaStatus,
-        protected ?string $encodedPath = null
+        protected string $encodedPath = '',
     ) {
     }
 }

@@ -32,17 +32,17 @@ class Video extends Model
 
     public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class);
     }
 
     public function genres()
     {
-        return $this->belongsTo(Genre::class);
+        return $this->belongsToMany(Genre::class);
     }
 
     public function castMembers()
     {
-        return $this->belongsTo(CastMember::class, 'cast_member_video');
+        return $this->belongsToMany(CastMember::class, 'cast_member_video');
     }
 
     public function media()

@@ -2,16 +2,25 @@
 
 namespace App\Repositories\Eloquent;
 
+use App\Enums\ImageTypes;
+use App\Enums\MediaTypes;
 use App\Models\Video as ModelVideo;
+use App\Repositories\Eloquent\Traits\VideoTrait;
 use App\Repositories\Presenters\PaginationPresenter;
-use Core\Video\Domain\Entity\Video;
+use Core\Video\Domain\Entity\Video as VideoEntity;
 use Core\Seedwork\Domain\Entity\Entity;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
+use Core\Video\Domain\Enum\MediaStatus;
+use Core\Video\Domain\Enum\Rating;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
+use Core\Video\Domain\ValueObject\Image;
+use Core\Video\Domain\ValueObject\Media;
 
 class VideoEloquentRepository implements VideoRepositoryInterface
 {
+    use VideoTrait;
 
     public function __construct(protected ModelVideo $model)
     {
@@ -19,98 +28,200 @@ class VideoEloquentRepository implements VideoRepositoryInterface
 
     public function insert(Entity $entity): Entity
     {
-        $genre = $this->model->create([
-            // TODO
+        $videoModel = $this->model->create([
+            'id' => $entity->id(),
+            'title' => $entity->title,
+            'description' => $entity->description,
+            'year_launched' => $entity->yearLaunched,
+            'rating' => $entity->rating->value,
+            'duration' => $entity->duration,
+            'opened' => $entity->opened,
         ]);
 
-        if (count($entity->categoriesId) > 0) {
-            $genre->categories()->sync($entity->categoriesId);
-        }
+        $this->syncRelationships($videoModel, $entity);
 
-        return $this->toVideo($genre);
+        return $this->convertObjectToEntity($videoModel);
     }
 
     public function findById(string $id): Entity
     {
-        if (!$genre = $this->model->find($id)) {
+        if (!$video = $this->model->find($id)) {
             throw new NotFoundException("Video not found for id: {$id}");
         }
 
-        return $this->toVideo($genre);
-    }
-
-    public function getIdsListIds(array $genresId = []): array
-    {
-        return $this->model->whereIn('id', $genresId)->pluck('id')->toArray();
+        return $this->convertObjectToEntity($video);
     }
 
     public function findAll(string $filter = '', $order = 'DESC'): array
     {
-        $genres = $this->model
+        $videos = $this->model
             ->where(function ($query) use ($filter) {
                 if ($filter) {
-                    $query->where('name', 'LIKE', "%{$filter}%");
+                    $query->where('title', 'LIKE', "%{$filter}%");
                 }
             })
-            ->orderBy('name', $order)
+            ->orderBy('title', $order)
             ->get();
-        return $genres->toArray();
+        return $videos->toArray();
     }
 
     public function paginate(string $filter = '', $order = 'DESC', int $page = 1, int $totalPage = 15): PaginationInterface
     {
-        $query = $this->model;
-        if ($filter) {
-            $query = $query->where('name', 'LIKE', "%{$filter}%");
-        }
-        $query = $query->orderBy('name', $order);
-        $paginator = $query->paginate();
+        $result = $this->model
+            ->where(function ($query) use ($filter) {
+                if ($filter) {
+                    $query->where('title', 'LIKE', "%{$filter}%");
+                }
+            })
+            ->orderBy('title', $order)
+            ->paginate($totalPage, ['*'], 'page', $page);
 
-        return new PaginationPresenter($paginator);
+        return new PaginationPresenter($result);
     }
 
     public function update(Entity $entityVideo): Entity
     {
-        if (!$genre = $this->model->find($entityVideo->id())) {
+        if (!$videoModel = $this->model->find($entityVideo->id())) {
             throw new NotFoundException("Video not found for id: {$entityVideo->id()}");
         }
 
-        $genre->update([
-            'name' => $entityVideo->name,
-            'is_active' => $entityVideo->isActive
+        $videoModel->update([
+            'title' => $entityVideo->title,
+            'description' => $entityVideo->description,
+            'year_launched' => $entityVideo->yearLaunched,
+            'rating' => $entityVideo->rating->value,
+            'duration' => $entityVideo->duration,
+            'opened' => $entityVideo->opened,
         ]);
 
-        if (count($entityVideo->categoriesId) > 0) {
-            $genre->categories()->sync($entityVideo->categoriesId);
-        }
+        $videoModel->refresh();
 
-        $genre->refresh();
+        $this->syncRelationships($videoModel, $entityVideo);
 
-        return $this->toVideo($genre);
+        return $this->convertObjectToEntity($videoModel);
     }
 
     public function delete(string $id): bool
     {
-        if (!$genre = $this->model->find($id)) {
+        if (!$video = $this->model->find($id)) {
             throw new NotFoundException("Video not found for id: {$id}");
         }
 
-        $result = $genre->delete();
-        $genre->refresh();
+        $result = $video->delete();
+        $video->refresh();
         return $result;
     }
 
     public function updateMedia(Entity $entity): Entity
     {
-        // TODO
+        if (!$videoModel = $this->model->find($entity->id())) {
+            throw new NotFoundException("Video not found for id: {$entity->id()}");
+        }
+
+        $this->model = $videoModel;
+
+        $this->updateMediaVideo($entity);
+        $this->updateMediaTrailer($entity);
+        $this->updateImageBanner($entity);
+        $this->updateImageThumb($entity);
+        $this->updateImageThumbHalf($entity);
+
+        return $this->convertObjectToEntity($videoModel);
     }
 
-    private function toVideo(object $object): Entity
+    protected function syncRelationships(ModelVideo $model, Entity $entity): void
     {
-        $entity =  new Video(
-            // TODO
+        $model->categories()->sync($entity->categoriesId);
+        $model->genres()->sync($entity->genresId);
+        $model->castMembers()->sync($entity->castMembersId);
+    }
+
+    protected function convertObjectToEntity(object $model): VideoEntity
+    {
+        $entity = new VideoEntity(
+            id: new Uuid($model->id),
+            title: $model->title,
+            description: $model->description,
+            yearLaunched: (int) $model->year_launched,
+            rating: Rating::from($model->rating),
+            duration: (bool) $model->duration,
+            opened: $model->opened
         );
 
+        foreach ($model->categories as $category) {
+            $entity->addCategoryId($category->id);
+        }
+
+        foreach ($model->genres as $genre) {
+            $entity->addGenreId($genre->id);
+        }
+
+        foreach ($model->castMembers as $castMember) {
+            $entity->addCastMemberId($castMember->id);
+        }
+
+        if ($video = $model->media) {
+            $entity->setVideoFile(new Media(
+                filePath: $video->file_path,
+                mediaStatus: MediaStatus::from($video->media_status),
+                encodedPath: $video->encoded_path
+            ));
+        }
+
+        if ($trailer = $model->trailer) {
+            $entity->setTrailerFile(new Media(
+                filePath: $trailer->file_path,
+                mediaStatus: MediaStatus::from($trailer->media_status),
+                encodedPath: $trailer->encoded_path
+            ));
+        }
+
+        if ($banner = $model->banner) {
+            $entity->setBannerFile(new Image(
+                path: $banner->path
+            ));
+        }
+
+        if ($thumb = $model->thumb) {
+            $entity->setThumbFile(new Image(
+                path: $thumb->path
+            ));
+        }
+
+        if ($thumbHalf = $model->thumbHalf) {
+            $entity->setThumbHalf(new Image(
+                path: $thumbHalf->path
+            ));
+        }
+
         return $entity;
+        // $builder = (new UpdateVideoBuilder())
+        //     ->setEntity($entity);
+
+        // if ($trailer = $model->trailer) {
+        //     $builder->addTrailer($trailer->file_path);
+        // }
+
+        // if ($mediaVideo = $model->media) {
+        //     $builder->addMediaVideo(
+        //         path: $mediaVideo->file_path,
+        //         mediaStatus: MediaStatus::from($mediaVideo->media_status),
+        //         encodedPath: $mediaVideo->encoded_path
+        //     );
+        // }
+
+        // if ($banner = $model->banner) {
+        //     $builder->addBanner($banner->path);
+        // }
+
+        // if ($thumb = $model->thumb) {
+        //     $builder->addThumb($thumb->path);
+        // }
+
+        // if ($thumbHalf = $model->thumbHalf) {
+        //     $builder->addThumbHalf($thumbHalf->path);
+        // }
+
+        // return $builder->getEntity();
     }
 }
