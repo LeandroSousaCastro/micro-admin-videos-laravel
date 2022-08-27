@@ -54,11 +54,12 @@ class VideoBuilder implements BuilderInterface
         }
     }
 
-    public function addMediaVideo(string $path, MediaStatus $mediaStatus): BuilderInterface
+    public function addMediaVideo(string $path, MediaStatus $mediaStatus, string $encodedPath = ''): BuilderInterface
     {
         $this->entity->setVideoFile(new Media(
             filePath: $path,
-            mediaStatus: $mediaStatus
+            mediaStatus: $mediaStatus,
+            encodedPath: $encodedPath
         ));
 
         return $this;

@@ -12,6 +12,7 @@ use Core\Seedwork\Domain\Entity\Entity;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Core\Seedwork\Domain\ValueObject\Uuid;
+use Core\Video\Domain\Builder\UpdateVideoBuilder;
 use Core\Video\Domain\Enum\MediaStatus;
 use Core\Video\Domain\Enum\Rating;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
@@ -194,34 +195,33 @@ class VideoEloquentRepository implements VideoRepositoryInterface
             ));
         }
 
-        return $entity;
-        // $builder = (new UpdateVideoBuilder())
-        //     ->setEntity($entity);
+        $builder = (new UpdateVideoBuilder())
+            ->setEntity($entity);
 
-        // if ($trailer = $model->trailer) {
-        //     $builder->addTrailer($trailer->file_path);
-        // }
+        if ($trailer = $model->trailer) {
+            $builder->addTrailer($trailer->file_path);
+        }
 
-        // if ($mediaVideo = $model->media) {
-        //     $builder->addMediaVideo(
-        //         path: $mediaVideo->file_path,
-        //         mediaStatus: MediaStatus::from($mediaVideo->media_status),
-        //         encodedPath: $mediaVideo->encoded_path
-        //     );
-        // }
+        if ($mediaVideo = $model->media) {
+            $builder->addMediaVideo(
+                path: $mediaVideo->file_path,
+                mediaStatus: MediaStatus::from($mediaVideo->media_status),
+                encodedPath: $mediaVideo->encoded_path
+            );
+        }
 
-        // if ($banner = $model->banner) {
-        //     $builder->addBanner($banner->path);
-        // }
+        if ($banner = $model->banner) {
+            $builder->addBanner($banner->path);
+        }
 
-        // if ($thumb = $model->thumb) {
-        //     $builder->addThumb($thumb->path);
-        // }
+        if ($thumb = $model->thumb) {
+            $builder->addThumb($thumb->path);
+        }
 
-        // if ($thumbHalf = $model->thumbHalf) {
-        //     $builder->addThumbHalf($thumbHalf->path);
-        // }
+        if ($thumbHalf = $model->thumbHalf) {
+            $builder->addThumbHalf($thumbHalf->path);
+        }
 
-        // return $builder->getEntity();
+        return $builder->getEntity();
     }
 }
