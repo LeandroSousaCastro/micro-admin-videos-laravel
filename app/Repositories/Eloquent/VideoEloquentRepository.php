@@ -161,46 +161,8 @@ class VideoEloquentRepository implements VideoRepositoryInterface
             $entity->addCastMemberId($castMember->id);
         }
 
-        if ($video = $model->media) {
-            $entity->setVideoFile(new Media(
-                filePath: $video->file_path,
-                mediaStatus: MediaStatus::from($video->media_status),
-                encodedPath: $video->encoded_path
-            ));
-        }
-
-        if ($trailer = $model->trailer) {
-            $entity->setTrailerFile(new Media(
-                filePath: $trailer->file_path,
-                mediaStatus: MediaStatus::from($trailer->media_status),
-                encodedPath: $trailer->encoded_path
-            ));
-        }
-
-        if ($banner = $model->banner) {
-            $entity->setBannerFile(new Image(
-                path: $banner->path
-            ));
-        }
-
-        if ($thumb = $model->thumb) {
-            $entity->setThumbFile(new Image(
-                path: $thumb->path
-            ));
-        }
-
-        if ($thumbHalf = $model->thumbHalf) {
-            $entity->setThumbHalf(new Image(
-                path: $thumbHalf->path
-            ));
-        }
-
         $builder = (new UpdateVideoBuilder())
             ->setEntity($entity);
-
-        if ($trailer = $model->trailer) {
-            $builder->addTrailer($trailer->file_path);
-        }
 
         if ($mediaVideo = $model->media) {
             $builder->addMediaVideo(
@@ -210,8 +172,8 @@ class VideoEloquentRepository implements VideoRepositoryInterface
             );
         }
 
-        if ($banner = $model->banner) {
-            $builder->addBanner($banner->path);
+        if ($trailer = $model->trailer) {
+            $builder->addTrailer($trailer->file_path);
         }
 
         if ($thumb = $model->thumb) {
@@ -220,6 +182,10 @@ class VideoEloquentRepository implements VideoRepositoryInterface
 
         if ($thumbHalf = $model->thumbHalf) {
             $builder->addThumbHalf($thumbHalf->path);
+        }
+
+        if ($banner = $model->banner) {
+            $builder->addBanner($banner->path);
         }
 
         return $builder->getEntity();
