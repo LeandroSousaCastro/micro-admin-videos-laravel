@@ -13,9 +13,11 @@ use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Application\Interfaces\DbTransactionInterface;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Event;
 use Tests\Stubs\UploadFilesStub;
 use Tests\Stubs\VideoEventStub;
 use Tests\TestCase;
+use Throwable;
 
 abstract class BaseUseCase extends TestCase
 {
@@ -35,7 +37,7 @@ abstract class BaseUseCase extends TestCase
     /**
      * @dataProvider provider
      */
-    public function testExecuteCreate(
+    public function testExecuteAction(
         int $categories,
         int $genres,
         int $castMembers,
@@ -139,5 +141,58 @@ abstract class BaseUseCase extends TestCase
             new UploadFilesStub(),
             new VideoEventStub()
         );
+    }
+
+    /**
+     * @test
+     */
+    public function uploadFilesException()
+    {
+        Event::listen(UploadFilesStub::class, function () {
+            throw new Throwable('upload files');
+        });
+
+        try {
+            $sut = $this->makeSut();
+            $input = $this->inputDTO(
+                trailerFile: [
+                    'name' => 'video.mp4',
+                    'type' => 'video/mp4',
+                    'tmp_name' => '/tmp/video.mp4',
+                    'error' => 0,
+                ]
+            );
+            $sut->exec($input);
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertDatabaseCount('videos', 0);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function eventException()
+    {
+        Event::listen(VideoEventStub::class, function () {
+            throw new Throwable('event');
+        });
+
+        try {
+            $sut = $this->makeSut();
+            $sut->exec($this->inputDTO(
+                videoFile: [
+                    'name' => 'video.mp4',
+                    'type' => 'video/mp4',
+                    'tmp_name' => '/tmp/video.mp4',
+                    'error' => 0,
+                ]
+            ));
+
+            $this->assertTrue(false);
+        } catch (Throwable $th) {
+            $this->assertDatabaseCount('videos', 0);
+        }
     }
 }

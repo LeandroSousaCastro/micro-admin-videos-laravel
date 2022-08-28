@@ -7,6 +7,8 @@ use Core\Video\Application\Dto\{
     UpdateInputDto
 };
 use Core\Video\Application\UseCase\UpdateUseCase;
+use Illuminate\Database\Events\TransactionBeginning;
+use Illuminate\Support\Facades\Event;
 
 class UpdateUseCaseTest extends BaseUseCase
 {
