@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Core\Video\Application\UseCase;
+namespace Test\Unit\Core\Video\Domain\Application\UseCase;
 
 use Core\Seedwork\Domain\ValueObject\Uuid;
 use Core\Video\Application\Dto\{

@@ -32,8 +32,8 @@ class ListUseCaseTest extends TestCase
             totalPage: $perPage
         ));
 
-        $this->assertCount($perPage, $response->items);
-        $this->assertEquals($total, $response->total);
+        $this->assertCount($perPage, $response->items());
+        $this->assertEquals($total, $response->total());
     }
 
     protected function provider(): array

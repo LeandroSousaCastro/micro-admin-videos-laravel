@@ -74,6 +74,16 @@ class VideoEloquentRepository implements VideoRepositoryInterface
                     $query->where('title', 'LIKE', "%{$filter}%");
                 }
             })
+            ->with([
+                'categories',
+                'genres',
+                'castMembers',
+                'thumb',
+                'thumbHalf',
+                'banner',
+                'trailer',
+                'media'
+            ])
             ->orderBy('title', $order)
             ->paginate($totalPage, ['*'], 'page', $page);
 

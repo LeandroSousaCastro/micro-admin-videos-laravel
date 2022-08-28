@@ -53,6 +53,7 @@ class UpdateUseCase extends BaseUseCase
             duration: $entity->duration,
             opened: $entity->opened,
             rating: $entity->rating,
+            createdAt: $entity->createdAt(),
             categories: $entity->categoriesId,
             genres: $entity->genresId,
             castMembers: $entity->castMembersId,

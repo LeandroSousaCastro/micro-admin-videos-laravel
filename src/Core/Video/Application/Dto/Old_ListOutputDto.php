@@ -2,7 +2,7 @@
 
 namespace Core\Video\Application\Dto;
 
-class ListOutputDto
+class Old_ListOutputDto
 {
     public function __construct(
         public array $items,

@@ -4,9 +4,9 @@ namespace Test\Unit\Core\Video\Domain\Application\UseCase;
 
 namespace Core\Video\Application\UseCase\ListUseCase;
 
+use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Core\Video\Application\Dto\{
-    ListInputDto,
-    ListOutputDto
+    ListInputDto
 };
 use Core\Video\Application\UseCase\ListUseCase;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
@@ -27,7 +27,7 @@ class ListUseCaseUnitTest extends TestCase
         $response = $useCase->execute(
             input: $this->mockInputDTO()
         );
-        $this->assertInstanceOf(ListOutputDto::class, $response);
+        $this->assertInstanceOf(PaginationInterface::class, $response);
     }
 
     private function mockRepository()

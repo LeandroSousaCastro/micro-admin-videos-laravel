@@ -21,6 +21,7 @@ class Video extends Entity
         'description' => 'required|min:3|max:255',
         'yearLaunched' => 'required|integer',
         'duration' => 'required|integer',
+        'rating' => 'required',
     ];
 
 
