@@ -10,5 +10,5 @@ interface FileStorageInterface
      * @return string
      */
     public function store(string $path, array $file): string;
-    public function delete(string $path);
+    public function delete(string $path): void;
 }

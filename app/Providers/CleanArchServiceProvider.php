@@ -16,7 +16,9 @@ use Core\Seedwork\Application\Interfaces\DbTransactionInterface;
 use App\Repositories\Transaction\DbTransaction;
 use App\Services\Storage\FileStorage;
 use Core\Seedwork\Application\Interfaces\FileStorageInterface;
-use Core\Video\Domain\Events\VideoEventManagerInterface;
+use Core\Video\Domain\Events\{
+    VideoEventManagerInterface
+};
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 

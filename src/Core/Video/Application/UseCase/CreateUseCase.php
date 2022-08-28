@@ -21,7 +21,6 @@ class CreateUseCase extends BaseUseCase
     {
         $this->validateAllIds($input);
         $this->builder->createEntity($input);
-
         try {
             $this->repository->insert($this->builder->getEntity());
             $this->storageFiles($input);
