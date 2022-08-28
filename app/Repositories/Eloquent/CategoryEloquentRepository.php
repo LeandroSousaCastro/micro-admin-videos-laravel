@@ -9,6 +9,7 @@ use Core\Seedwork\Domain\Entity\Entity;
 use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 
 class CategoryEloquentRepository implements CategoryRepositoryInterface
 {
@@ -99,9 +100,9 @@ class CategoryEloquentRepository implements CategoryRepositoryInterface
     private function toCategory(object $data): Entity
     {
         $entity =  new Category(
-            id: $data->id,
             name: $data->name,
             description: $data->description,
+            id: new Uuid($data->id),
         );
         ((bool) $data->is_active) ? $entity->activate() : $entity->deactivate();
 

@@ -12,7 +12,7 @@ use Core\Genre\Domain\Entity\Genre;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Application\Interfaces\DbTransactionInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
-use Ramsey\Uuid\Uuid as RamseyUuid;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -25,7 +25,7 @@ class CreateUseCaseUnitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->uuid = RamseyUuid::uuid4()->toString();
+        $this->uuid = Uuid::random();
         $this->name = 'name';
     }
 

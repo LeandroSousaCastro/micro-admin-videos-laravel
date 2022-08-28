@@ -9,6 +9,7 @@ use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Tests\TestCase;
 
 class CastMemberEloquentRepositoryTest extends TestCase
@@ -99,12 +100,13 @@ class CastMemberEloquentRepositoryTest extends TestCase
     public function testUpdateNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('CastMember not found for id: id fake');
+        $uuid = Uuid::random();
         $entity = new EntityCastMember(
-            id: 'id fake',
             name: 'CastMember',
-            type: CastMemberType::ACTOR
+            type: CastMemberType::ACTOR,
+            id: $uuid,
         );
+        $this->expectExceptionMessage("CastMember not found for id: {$uuid}");
         $this->repository->update($entity);
     }
 
@@ -112,9 +114,9 @@ class CastMemberEloquentRepositoryTest extends TestCase
     {
         $castMember = CastMemberModel::factory()->create();
         $entity = new EntityCastMember(
-            id: $castMember->id,
             name: 'CastMember',
-            type: CastMemberType::ACTOR
+            type: CastMemberType::ACTOR,
+            id: new Uuid($castMember->id),
         );
 
         $name = 'CastMember updated';

@@ -9,6 +9,7 @@ use Core\Seedwork\Domain\Entity\Entity;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 
 class GenreEloquentRepository implements GenreRepositoryInterface
 {
@@ -106,8 +107,8 @@ class GenreEloquentRepository implements GenreRepositoryInterface
     private function toGenre(object $object): Entity
     {
         $entity =  new Genre(
-            id: $object->id,
             name: $object->name,
+            id: new Uuid($object->id),
             createdAt: $object->created_at,
         );
         ((bool) $object->is_active) ? $entity->activate() : $entity->deactivate();

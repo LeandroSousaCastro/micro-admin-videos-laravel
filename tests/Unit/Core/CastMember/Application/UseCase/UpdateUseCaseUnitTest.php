@@ -10,7 +10,7 @@ use Core\CastMember\Application\UseCase\UpdateUseCase;
 use Core\CastMember\Domain\Entity\CastMember;
 use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
-use Ramsey\Uuid\Uuid as RamseyUuid;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use stdClass;
@@ -19,7 +19,7 @@ class UpdateUseCaseUnitTest extends TestCase
 {
     public function testUpdateCastMember()
     {
-        $uuid = RamseyUuid::uuid4()->toString();
+        $uuid = Uuid::random();
         $name = 'Name';
 
         $mockEntity = Mockery::mock(CastMember::class, [
@@ -31,7 +31,7 @@ class UpdateUseCaseUnitTest extends TestCase
         $mockRepository = Mockery::mock(stdClass::class, CastMemberRepositoryInterface::class);
         $mockRepository->shouldReceive('findById')
             ->once()
-            ->with($uuid)
+            ->with($uuid->__toString())
             ->andReturn($mockEntity);
         $mockRepository->shouldReceive('update')
             ->once()
@@ -39,9 +39,9 @@ class UpdateUseCaseUnitTest extends TestCase
 
 
         $mockInputDto = Mockery::mock(UpdateInputDto::class, [
-            $uuid,
             'new name',
-            CastMemberType::ACTOR->value
+            CastMemberType::ACTOR->value,
+            $uuid->__toString(),
         ]);
 
         $useCase = new UpdateUseCase($mockRepository);

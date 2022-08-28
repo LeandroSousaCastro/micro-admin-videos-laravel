@@ -9,15 +9,15 @@ use Core\Category\Application\Dto\{
 use Core\Category\Application\UseCase\GetUseCase;
 use Core\Category\Domain\Entity\Category;
 use Core\Category\Domain\Repository\CategoryRepositoryInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 
 class GetUseCaseUnitTest extends TestCase
 {
     public function testGetCategoryById()
     {
-        $id = Uuid::uuid4()->toString();
+        $id = Uuid::random();
         $name = 'name';
         $description = 'teste description';
         $isActive = false;
@@ -33,11 +33,11 @@ class GetUseCaseUnitTest extends TestCase
 
         $mockRepository = Mockery::mock(stdClass::class, CategoryRepositoryInterface::class);
         $mockRepository->shouldReceive('findById')
-            ->with($id)
+            ->with($id->__toString())
             ->andReturn($mockEntity);
 
         $mockInputDto = Mockery::mock(GetInputDto::class, [
-            $id
+            $id->__toString()
         ]);
 
         $useCase = new GetUseCase($mockRepository);
@@ -45,7 +45,7 @@ class GetUseCaseUnitTest extends TestCase
 
         $this->assertInstanceOf(GetUseCase::class, $useCase);
         $this->assertInstanceOf(GetOutputDto::class, $responseUseCase);
-        $this->assertEquals($id, $responseUseCase->id);
+        $this->assertEquals($id->__toString(), $responseUseCase->id);
         $this->assertEquals('name', $responseUseCase->name);
         $this->assertEquals($description, $responseUseCase->description);
         $this->assertFalse($responseUseCase->is_active);

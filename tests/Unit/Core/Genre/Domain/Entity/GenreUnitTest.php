@@ -63,17 +63,17 @@ class GenreUnitTest extends TestCase
 
     public function testUpdate()
     {
-        $uuid = Uuid::random()->__toString();
+        $uuid = Uuid::random();
         $category = new Genre(
+            name: 'Action',
             id: $uuid,
-            name: 'Action'
         );
 
         $category->update(
             name: 'Drama'
         );
 
-        $this->assertEquals($uuid, $category->id());
+        $this->assertEquals($uuid->__toString(), $category->id());
         $this->assertEquals('Drama', $category->name);
     }
 

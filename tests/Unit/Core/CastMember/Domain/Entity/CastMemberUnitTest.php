@@ -15,11 +15,11 @@ class CastMemberUnitTest extends TestCase
 {
     public function testAttributes()
     {
-        $uuid = (string) RamseyUuid::uuid4();
+        $uuid = Uuid::random();
         $castMember = new CastMember(
-            id: new Uuid($uuid),
             name: 'Name',
             type: CastMemberType::ACTOR,
+            id: $uuid,
             createdAt: new \DateTime('2021-01-01 00:00:00')
         );
 
@@ -69,11 +69,11 @@ class CastMemberUnitTest extends TestCase
 
     public function testUpdate()
     {
-        $uuid = Uuid::random()->__toString();
+        $uuid = Uuid::random();
         $castMember = new CastMember(
-            id: $uuid,
             name: 'Name',
-            type: CastMemberType::DIRECTOR
+            type: CastMemberType::DIRECTOR,
+            id: $uuid,
         );
 
         $castMember->update(

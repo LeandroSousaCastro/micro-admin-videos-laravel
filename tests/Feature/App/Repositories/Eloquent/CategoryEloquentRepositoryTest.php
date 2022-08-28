@@ -7,12 +7,13 @@ use App\Models\Category as CategoryModel;
 use App\Repositories\Eloquent\CategoryEloquentRepository;
 use Core\Category\Domain\Entity\Category as EntityCategory;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Tests\TestCase;
 
 class CategoryEloquentRepositoryTest extends TestCase
 {
     protected $repository;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -52,7 +53,7 @@ class CategoryEloquentRepositoryTest extends TestCase
     public function testFindAll()
     {
         CategoryModel::factory()->count(10)->create();
-        $response = $this->repository->findAll();        
+        $response = $this->repository->findAll();
         $this->assertIsArray($response);
         $this->assertCount(10, $response);
     }
@@ -72,12 +73,24 @@ class CategoryEloquentRepositoryTest extends TestCase
         $this->assertCount(0, $response->items());
     }
 
+    public function testUpdateNotFound()
+    {
+        $this->expectException(NotFoundException::class);
+        $uuid = Uuid::random();
+        $entity = new EntityCategory(
+            name: 'Category',
+            id: $uuid,
+        );
+        $this->expectExceptionMessage("Category not found for id: {$uuid}");
+        $this->repository->update($entity);
+    }
+
     public function testUpdate()
     {
         $category = CategoryModel::factory()->create();
         $entity = new EntityCategory(
-            id: $category->id,
-            name: 'Category'
+            name: 'Category',
+            id: new Uuid($category->id),
         );
 
         $entity->update(
@@ -91,17 +104,6 @@ class CategoryEloquentRepositoryTest extends TestCase
         $this->assertDatabaseHas('categories', [
             'name' => 'Category Update'
         ]);
-    }
-
-    public function testUpdateNotFound()
-    {
-        $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Category not found for id: id fake');
-        $entity = new EntityCategory(
-            id: 'id fake',
-            name: 'Category'
-        );
-        $this->repository->update($entity);
     }
 
     public function testDelete()

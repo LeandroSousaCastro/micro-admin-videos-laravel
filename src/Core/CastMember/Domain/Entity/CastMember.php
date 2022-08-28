@@ -19,8 +19,8 @@ class CastMember extends Entity
     public function __construct(
         protected string $name,
         protected CastMemberType $type,
-        protected Uuid|string $id = '',
-        protected DateTime|string $createdAt = ''
+        protected ?Uuid $id = null,
+        protected ?\DateTime $createdAt = null
     ) {
         parent::__construct($id, $createdAt);
         $this->validate();

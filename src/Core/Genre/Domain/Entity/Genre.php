@@ -20,8 +20,8 @@ class Genre extends Entity
         protected string $name,
         protected array $categoriesId = [],
         protected bool $isActive = false,
-        protected Uuid|string $id = '',
-        protected DateTime|string $createdAt = ''
+        protected ?Uuid $id = null,
+        protected ?\DateTime $createdAt = null
     ) {
         parent::__construct($id, $createdAt);
         $this->validate();

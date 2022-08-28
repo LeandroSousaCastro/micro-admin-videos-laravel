@@ -10,6 +10,7 @@ use Core\CastMember\Domain\Enum\CastMemberType;
 use Core\CastMember\Domain\Repository\CastMemberRepositoryInterface;
 use Core\Seedwork\Domain\Exception\NotFoundException;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 
 class CastMemberEloquentRepository implements CastMemberRepositoryInterface
 {
@@ -98,9 +99,9 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
     private function toCastMember(object $object): Entity
     {
         return new CastMember(
-            id: $object->id,
             name: $object->name,
             type: CastMemberType::from($object->type),
+            id: new Uuid($object->id),
             createdAt: $object->created_at
         );
     }

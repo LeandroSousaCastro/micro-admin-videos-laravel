@@ -37,8 +37,8 @@ class Video extends Entity
         protected ?Media $trailerFile = null,
         protected ?Media $videoFile = null,
         protected bool $publish = false,
-        protected Uuid|string $id = '',
-        protected \DateTime|string $createdAt = ''
+        protected ?Uuid $id = null,
+        protected ?\DateTime $createdAt = null
     ) {
         parent::__construct($id, $createdAt);
         $this->validate();

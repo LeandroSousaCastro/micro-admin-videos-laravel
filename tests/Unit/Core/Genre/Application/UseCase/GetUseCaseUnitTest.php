@@ -9,7 +9,7 @@ use Core\Genre\Application\Dto\{
 use Core\Genre\Application\UseCase\GetUseCase;
 use Core\Genre\Domain\Entity\Genre;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
-use Ramsey\Uuid\Uuid;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class GetUseCaseUnitTest extends TestCase
 {
     public function testGetUseCase()
     {
-        $id = Uuid::uuid4()->toString();
+        $id = Uuid::random();
         $name = 'name';
 
         $mockEntity = Mockery::mock(Genre::class, [
@@ -32,11 +32,11 @@ class GetUseCaseUnitTest extends TestCase
         $mockRepository = Mockery::mock(stdClass::class, GenreRepositoryInterface::class);
         $mockRepository->shouldReceive('findById')
             ->once()
-            ->with($id)
+            ->with($id->__toString())
             ->andReturn($mockEntity);
 
         $mockInputDto = Mockery::mock(GetInputDto::class, [
-            $id
+            $id->__toString()
         ]);
 
         $useCase = new GetUseCase($mockRepository);
@@ -44,10 +44,10 @@ class GetUseCaseUnitTest extends TestCase
 
         $this->assertInstanceOf(GetUseCase::class, $useCase);
         $this->assertInstanceOf(GetOutputDto::class, $responseUseCase);
-        $this->assertEquals($id, $responseUseCase->id);
+        $this->assertEquals($id->__toString(), $responseUseCase->id);
         $this->assertEquals('name', $responseUseCase->name);
         $this->assertTrue($responseUseCase->is_active);
-        $mockRepository->shouldHaveReceived()->findById($id);
+        $mockRepository->shouldHaveReceived()->findById($id->__toString());
 
         Mockery::close();
     }

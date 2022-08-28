@@ -11,11 +11,11 @@ abstract class Entity
     use MethodsMagicsTrait;
 
     public function __construct(
-        protected Uuid|string $id = '',
-        protected \DateTime|string $createdAt = ''
+        protected ?Uuid $id = null,
+        protected ?\DateTime $createdAt = null
     ) {
-        $this->id = $this->id === '' ? Uuid::random() : $this->id;
-        $this->createdAt = $this->createdAt ? $this->createdAt : new \DateTime();
+        $this->id = $this->id ?? Uuid::random();
+        $this->createdAt = $this->createdAt ?? new \DateTime();
     }
 
     public function id(): string

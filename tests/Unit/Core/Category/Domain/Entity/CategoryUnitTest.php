@@ -51,13 +51,13 @@ class CategoryUnitTest extends TestCase
 
     public function testUpdate()
     {
-        $uuid = Uuid::random()->__toString();
+        $uuid = Uuid::random();
         $category = new Category(
-            id: $uuid,
             name: 'Category',
             description: "Category description",
             isActive: true,
-            createdAt: '2020-01-01 00:00:00',
+            id: $uuid,
+            createdAt: new \DateTime('2020-01-01 00:00:00'),
         );
 
         $category->update(
@@ -65,7 +65,7 @@ class CategoryUnitTest extends TestCase
             description: "New Category description",
         );
 
-        $this->assertEquals($uuid, $category->id());
+        $this->assertEquals($uuid->__toString(), $category->id());
         $this->assertEquals('New Category', $category->name);
         $this->assertEquals("New Category description", $category->description);
     }

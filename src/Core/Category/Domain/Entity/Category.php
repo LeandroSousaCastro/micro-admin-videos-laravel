@@ -20,8 +20,8 @@ class Category extends Entity
         protected string $name,
         protected string $description = '',
         protected bool $isActive = true,
-        protected Uuid|string $id = '',
-        protected \DateTime|string $createdAt = ''
+        protected ?Uuid $id = null,
+        protected ?\DateTime $createdAt = null
     ) {
         parent::__construct($id, $createdAt);
         $this->validate();

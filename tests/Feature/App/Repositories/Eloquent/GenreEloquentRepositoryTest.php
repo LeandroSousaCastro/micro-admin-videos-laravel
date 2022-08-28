@@ -9,12 +9,13 @@ use App\Repositories\Eloquent\GenreEloquentRepository;
 use Core\Genre\Domain\Entity\Genre as EntityGenre;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Domain\Repository\PaginationInterface;
+use Core\Seedwork\Domain\ValueObject\Uuid;
 use Tests\TestCase;
 
 class GenreEloquentRepositoryTest extends TestCase
 {
     protected $repository;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -149,9 +150,9 @@ class GenreEloquentRepositoryTest extends TestCase
     {
         $genre = ModelGenre::factory()->create();
         $entity = new EntityGenre(
-            id: $genre->id,
             name: 'Genre',
             isActive: (bool) $genre->is_active,
+            id: new Uuid($genre->id),
             createdAt: new \DateTime($genre->created_at)
         );
 
@@ -170,11 +171,12 @@ class GenreEloquentRepositoryTest extends TestCase
     public function testUpdateNotFound()
     {
         $this->expectException(NotFoundException::class);
-        $this->expectExceptionMessage('Genre not found for id: id fake');
+        $uuid = Uuid::random();
         $entity = new EntityGenre(
-            id: 'id fake',
-            name: 'Genre'
+            name: 'Genre',
+            id: $uuid,
         );
+        $this->expectExceptionMessage("Genre not found for id: {$uuid}");
         $this->repository->update($entity);
     }
 
