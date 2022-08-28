@@ -26,19 +26,10 @@ class UpdateVideoRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => [
-                'required',
-                'max: 255',
-            ],
-            'description' => [
-                'required'
-            ],
+            'title' => 'required|max: 255',
+            'description' => 'required',
             'categories' => 'required|array|exists:categories,id,deleted_at,NULL',
-            'genres' => [
-                'required',
-                'array',
-                'exists:genres,id,deleted_at,NULL',
-            ],
+            'genres' => 'required|array|exists:genres,id,deleted_at,NULL',
             'cast_members' => 'required|array|exists:cast_members,id,deleted_at,NULL',
             'thumb_file' => 'nullable|image', //5MB
             'thumb_half_file' => 'nullable|image', //5MB
