@@ -19,7 +19,7 @@ class VideoCreatedEvent implements EventInterface
     public function getPayload(): array
     {
         return [
-            'resource_id' => $this->video->id,
+            'resource_id' => $this->video->id(),
             'file_path' => $this->video->videoFile()->filePath
         ];
     }

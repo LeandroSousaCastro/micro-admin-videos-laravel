@@ -8,17 +8,19 @@ use App\Http\Requests\{
     StoreVideoRequest,
     UpdateVideoRequest
 };
-use Core\Video\Application\{
-    Dto\GetInputDto,
-    Dto\ListInputDto,
-    Dto\CreateInputDto,
-    Dto\DeleteInputDto,
-    Dto\UpdateInputDto,
-    UseCase\ListUseCase,
-    UseCase\GetUseCase,
-    UseCase\CreateUseCase,
-    UseCase\UpdateUseCase,
-    UseCase\DeleteUseCase,
+use Core\Video\Application\Dto\{
+    GetInputDto,
+    ListInputDto,
+    CreateInputDto,
+    DeleteInputDto,
+    UpdateInputDto,
+};
+use Core\Video\Application\UseCase\{
+    ListUseCase,
+    GetUseCase,
+    CreateUseCase,
+    UpdateUseCase,
+    DeleteUseCase,
 };
 use Core\Video\Domain\Enum\Rating;
 use Illuminate\Http\Request;

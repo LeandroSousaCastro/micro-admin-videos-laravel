@@ -2,8 +2,6 @@
 
 namespace App\Repositories\Eloquent;
 
-use App\Enums\ImageTypes;
-use App\Enums\MediaTypes;
 use App\Models\Video as ModelVideo;
 use App\Repositories\Eloquent\Traits\VideoTrait;
 use App\Repositories\Presenters\PaginationPresenter;
@@ -16,8 +14,6 @@ use Core\Video\Domain\Builder\UpdateVideoBuilder;
 use Core\Video\Domain\Enum\MediaStatus;
 use Core\Video\Domain\Enum\Rating;
 use Core\Video\Domain\Repository\VideoRepositoryInterface;
-use Core\Video\Domain\ValueObject\Image;
-use Core\Video\Domain\ValueObject\Media;
 
 class VideoEloquentRepository implements VideoRepositoryInterface
 {

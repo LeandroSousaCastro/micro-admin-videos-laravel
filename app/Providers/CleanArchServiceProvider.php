@@ -14,6 +14,8 @@ use Core\Category\Domain\Repository\CategoryRepositoryInterface;
 use Core\Genre\Domain\Repository\GenreRepositoryInterface;
 use Core\Seedwork\Application\Interfaces\DbTransactionInterface;
 use App\Repositories\Transaction\DbTransaction;
+use App\Services\AMQP\AMQPInterface;
+use App\Services\AMQP\PhpAmqpService;
 use App\Services\Storage\FileStorage;
 use Core\Seedwork\Application\Interfaces\FileStorageInterface;
 use Core\Video\Domain\Events\{
@@ -49,6 +51,14 @@ class CleanArchServiceProvider extends ServiceProvider
         $this->app->bind(
             DbTransactionInterface::class,
             DbTransaction::class
+        );
+
+        /**
+         * Services
+         */
+        $this->app->bind(
+            AMQPInterface::class,
+            PhpAmqpService::class
         );
     }
 
