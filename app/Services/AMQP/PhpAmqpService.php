@@ -18,7 +18,7 @@ class PhpAmqpService implements AMQPInterface
             return;
         }
 
-        $configs = config('microservices.rabbitmq.hosts')[0];
+        $configs = current(config('microservices.rabbitmq.hosts'));
         $this->connection = new AMQPStreamConnection(
             host: $configs['host'],
             port: $configs['port'],

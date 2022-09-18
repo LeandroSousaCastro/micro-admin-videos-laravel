@@ -9,7 +9,8 @@
         "Controllers",
         "Repository",
         "Application",
-        "Broker"
+        "Broker",
+        "Cammand"
     ],
     "intelephense.diagnostics.typeErrors": false
 }
