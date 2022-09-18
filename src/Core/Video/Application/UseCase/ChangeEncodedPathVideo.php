@@ -20,7 +20,6 @@ class ChangeEncodedPathVideo
     public function execute(ChangeEncodedInputDTO $input): ChangeEncodedOutputDTO
     {
         $entity = $this->repository->findById($input->id);
-
         $entity->setVideoFile(
             new Media(
                 filePath: $entity->videoFile()?->filePath ?? '',
