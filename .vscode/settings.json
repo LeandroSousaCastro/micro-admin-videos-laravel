@@ -10,7 +10,8 @@
         "Repository",
         "Application",
         "Broker",
-        "Cammand"
+        "Cammand",
+        "security"
     ],
     "intelephense.diagnostics.typeErrors": false,
     "workbench.colorCustomizations": {
