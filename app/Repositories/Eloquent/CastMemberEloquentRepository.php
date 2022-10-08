@@ -64,7 +64,7 @@ class CastMemberEloquentRepository implements CastMemberRepositoryInterface
             $query = $query->where('name', 'LIKE', "%{$filter}%");
         }
         $query = $query->orderBy('name', $order);
-        $paginator = $query->paginate();
+        $paginator = $query->paginate($totalPage, ['*'], 'page', $page);
 
         return new PaginationPresenter($paginator);
     }
